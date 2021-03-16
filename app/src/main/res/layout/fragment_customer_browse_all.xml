@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/button_sign_out" />
+
+    <include
+        android:id="@+id/include4"
+        layout="@layout/button_basket" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/beer_recyclerview"
+        android:layout_width="407dp"
+        android:layout_height="648dp"
+        android:layout_marginTop="84dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/include4" />
+</androidx.constraintlayout.widget.ConstraintLayout>
