@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">BeerShop</string>
+    <string name="switch_customer">Customer</string>
 </resources>

@@ -16,9 +16,16 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.beershop.database.UserDataBaseHelper;
+import com.example.beershop.models.ResellerModel;
+
+import java.util.List;
+
 public class CustomerSellerListFragment extends Fragment {
     Button mSignoutButton;
     RecyclerView mSellerListRecyclerView;
+    UserDataBaseHelper mDBHelper;
+    List<ResellerModel> mResellers;
 
     public static CustomerSellerListFragment newInstance() {
         CustomerSellerListFragment fragment = new CustomerSellerListFragment();
@@ -29,13 +36,18 @@ public class CustomerSellerListFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_customer_seller_list, container, false);
+        mDBHelper = new UserDataBaseHelper(getContext());
         mSellerListRecyclerView = v.findViewById(R.id.seller_list_recyclerview);
+        mResellers = mDBHelper.getAllResellers();
         mSignoutButton = v.findViewById(R.id.buttonSignout);
         mSellerListRecyclerView.setAdapter(new SellerListAdapter());
         mSellerListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mDBHelper = new UserDataBaseHelper(getContext());
+
 
         return v;
     }
+
 
     class SellerListAdapter extends RecyclerView.Adapter<SellerListAdapter.SellerViewHolder> {
         private String[] localDataSet;
@@ -94,3 +106,4 @@ public class CustomerSellerListFragment extends Fragment {
         }
     }
 }
+// Have a get all method that return an array of ResellerModels for the adapter?
