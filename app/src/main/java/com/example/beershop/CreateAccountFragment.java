@@ -101,8 +101,4 @@ public class CreateAccountFragment extends Fragment {
 
 }
 
-/*
-TODO:
--  if
 
- */

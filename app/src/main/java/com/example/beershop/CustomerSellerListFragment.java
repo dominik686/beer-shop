@@ -40,7 +40,7 @@ public class CustomerSellerListFragment extends Fragment {
         mSellerListRecyclerView = v.findViewById(R.id.seller_list_recyclerview);
         mResellers = mDBHelper.getAllResellers();
         mSignoutButton = v.findViewById(R.id.buttonSignout);
-        mSellerListRecyclerView.setAdapter(new SellerListAdapter());
+        mSellerListRecyclerView.setAdapter(new SellerListAdapter(mResellers));
         mSellerListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mDBHelper = new UserDataBaseHelper(getContext());
 
@@ -50,10 +50,11 @@ public class CustomerSellerListFragment extends Fragment {
 
 
     class SellerListAdapter extends RecyclerView.Adapter<SellerListAdapter.SellerViewHolder> {
-        private String[] localDataSet;
         private Context mContext;
+        List<ResellerModel> mResellers;
 
-        public SellerListAdapter() {
+        public SellerListAdapter(List<ResellerModel> pResellers) {
+            mResellers = pResellers;
 
         }
 
@@ -73,26 +74,28 @@ public class CustomerSellerListFragment extends Fragment {
         /* Get element from your dataset at this position and replace  the contents of the view
         with that element
          */
+            holder.mSellerName.setText(mResellers.get(position).getUsername());
         }
 
         // Return the size of the dataset (invoked by the layout manager)
         @Override
         public int getItemCount() {
-            return 10;
+            return mResellers.size();
         }
 
         public class SellerViewHolder extends RecyclerView.ViewHolder {
             private final TextView mSellerName;
             private final ImageView mLogo;
             private final Button mVisitButton;
-
+            private ResellerModel mReseller;
             public SellerViewHolder(View v, Context context) {
                 super(v);
 
-                mSellerName = v.findViewById(R.id.visitButton);
+                mSellerName = v.findViewById(R.id.sellerName);
                 mLogo = v.findViewById(R.id.sellerLogo);
                 mVisitButton = v.findViewById(R.id.visitButton);
                 mContext = context;
+
                 //On button press
                 //Visit the seller shop
                 mVisitButton.setOnClickListener(new View.OnClickListener() {

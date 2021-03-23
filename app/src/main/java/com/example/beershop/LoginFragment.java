@@ -91,7 +91,6 @@ public class LoginFragment extends Fragment {
 //TODO:
 /* -make it so that you can press login unless the two fields are filled
    -make a minimum amount of characters for each field?
-   -Add login button functionality
    -Add a picture
    -
 * */

@@ -18,7 +18,10 @@ public class CustomerShopPageFragment extends Fragment {
     Button mBrowseAllButton;
     Button mScanBarcodeButton;
     Button mGoBackButton;
-
+    /*
+    TODO:
+    -transfer the customer model from the previous fragment?
+    */
 
     public static CustomerShopPageFragment newInstance() {
 
