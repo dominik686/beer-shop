@@ -16,10 +16,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.beershop.database.BeerDataBaseHelper;
+
 public class CustomerBrowseAllFragment extends Fragment {
     RecyclerView mBeerList;
     Button mBasket;
     Button mSignOut;
+    BeerDataBaseHelper beerDBHelper;
 
     public static CustomerBrowseAllFragment newInstance() {
 
@@ -35,8 +38,11 @@ public class CustomerBrowseAllFragment extends Fragment {
         mBasket = v.findViewById(R.id.basketButton);
         mSignOut = v.findViewById(R.id.buttonSignout);
 
+        beerDBHelper = new BeerDataBaseHelper(getContext());
+        beerDBHelper.debug();
         mBeerList.setAdapter(new BeerListAdapter());
         mBeerList.setLayoutManager(new LinearLayoutManager(getContext()));
+
         return v;
     }
 

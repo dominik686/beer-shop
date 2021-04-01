@@ -6,6 +6,12 @@ public class BeerCategoryModel {
     String mBeerCategoryName;
     String mBeerCategoryDescription;
 
+    public BeerCategoryModel(int mBeerCategoryID, String mBeerCategoryName, String mBeerCategoryDescription) {
+        this.mBeerCategoryID = mBeerCategoryID;
+        this.mBeerCategoryName = mBeerCategoryName;
+        this.mBeerCategoryDescription = mBeerCategoryDescription;
+    }
+
     public int getBeerCategoryID() {
         return mBeerCategoryID;
     }

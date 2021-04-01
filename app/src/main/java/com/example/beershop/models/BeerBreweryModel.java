@@ -6,6 +6,12 @@ public class BeerBreweryModel {
     String mBeerBreweryName; // Name of the brewery
     String mBeerBreweryDescription; // Description of the brewery
 
+    public BeerBreweryModel(int mBeerBreweryID, String mBeerBreweryName, String mBeerBreweryDescription) {
+        this.mBeerBreweryID = mBeerBreweryID;
+        this.mBeerBreweryName = mBeerBreweryName;
+        this.mBeerBreweryDescription = mBeerBreweryDescription;
+    }
+
     public int getBeerBreweryID() {
         return mBeerBreweryID;
     }

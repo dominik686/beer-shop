@@ -3,10 +3,13 @@ package com.example.beershop.models;
 //This is the data model class for beers
 public class BeerModel {
     int mBeerID; // Unique ID for the record
-    String mBeerDescription;
-    int mBeerPicturesID; // ID number for the pictures
+    String mBeerThumbnailName; // String for the pictures
     int mBeerCategoryID; // ID of the beer category
     int mBeerBreweryID; // ID for the brewery
+
+    public BeerModel() {
+
+    }
 
     public int getBeerID() {
         return mBeerID;
@@ -16,28 +19,19 @@ public class BeerModel {
         this.mBeerID = mBeerID;
     }
 
-    public String getBeerDescription() {
-        return mBeerDescription;
+    public String getBeerThumbnailName() {
+        return mBeerThumbnailName;
+    }
+
+    public void setBeerThumbnailName(String mBeerThumbnailName) {
+        this.mBeerThumbnailName = mBeerThumbnailName;
     }
 
     public void setBeerDescription(String mBeerDescription) {
-        this.mBeerDescription = mBeerDescription;
-    }
-
-    public int getBeerPicturesID() {
-        return mBeerPicturesID;
-    }
-
-    public void setBeerPicturesID(int mBeerPicturesID) {
-        this.mBeerPicturesID = mBeerPicturesID;
     }
 
     public int getBeerCategoryID() {
         return mBeerCategoryID;
-    }
-
-    public void setBeerCategoryID(int mBeerCategoryID) {
-        this.mBeerCategoryID = mBeerCategoryID;
     }
 
     public int getBeerBreweryID() {
