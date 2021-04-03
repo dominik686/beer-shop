@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">BeerShop</string>
     <string name="switch_customer">Customer</string>
+    <string name="add_new_beer">Add new beer</string>
+    <string name="check_sales">Check sales</string>
+    <string name="beer_name">BEER NAME</string>
+    <string name="beer_category">BEER CATEGORY</string>
+    <string name="brewery">BREWERY</string>
+    <string name="stock_number">Quanitity of item in stock:</string>
+    <string name="beer_image">BEER IMAGE</string>
+    <string name="image_name">Enter the name of the image:</string>
+    <string name="barcode">BARCODE</string>
+    <string name="enter_barcode">Enter the barcode value:</string>
 </resources>

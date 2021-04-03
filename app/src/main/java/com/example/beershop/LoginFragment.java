@@ -15,8 +15,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.beershop.database.BeerDataBaseHelper;
 import com.example.beershop.database.UserDataBaseHelper;
 import com.example.beershop.models.CustomerModel;
+import com.example.beershop.models.ResellerModel;
 
 public class LoginFragment extends Fragment {
     ImageView mImage;
@@ -26,6 +28,7 @@ public class LoginFragment extends Fragment {
     Button mLoginButton;
     Switch mCustomerSwitch;
     UserDataBaseHelper mUserDBHelper;
+    BeerDataBaseHelper mBeerDBHelper;
 
     public static LoginFragment newInstance() {
         LoginFragment fragment = new LoginFragment();
@@ -43,6 +46,8 @@ public class LoginFragment extends Fragment {
         mUsername = v.findViewById(R.id.username);
         mPassword = v.findViewById(R.id.password);
         mUserDBHelper = new UserDataBaseHelper(getContext());
+        mBeerDBHelper = new BeerDataBaseHelper(getContext());
+        mBeerDBHelper.addDefaultValues();
         mCreateAccountButton = v.findViewById(R.id.loginCreateAccountButton);
         mCreateAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +84,11 @@ public class LoginFragment extends Fragment {
                         }
                     } else {
                         //Search the reseller table, and if the username matches, log in
+                        ResellerModel rm = new ResellerModel(-1, username, password);
+                        if (mUserDBHelper.resellerCredentialsCheck(rm)) {
+                            Intent intent = new Intent(getActivity(), ResellerMainPageActivity.class);
+                            startActivity(intent);
+                        }
                     }
                 }
             }

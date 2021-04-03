@@ -169,4 +169,13 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
 
         return returnList;
     }
+
+    public boolean resellerCredentialsCheck(ResellerModel rm) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String queryString = "SELECT * FROM " + RESELLERS_TABLE + " WHERE " + COLUMN_RESELLER_USERNAME + " = "
+                + "\"" + rm.getUsername() + "\"" + " AND " + COLUMN_RESELLER_PASSWORD + " = " + "\"" + rm.getPassword() + "\"";
+        Cursor cursor = db.rawQuery(queryString, null);
+
+        return cursor.moveToFirst();
+    }
 }

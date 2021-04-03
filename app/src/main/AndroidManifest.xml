@@ -21,6 +21,8 @@
         <activity android:name=".CreateAccountActivity" />
         <activity android:name=".CustomerBrowseAllActivity" />
         <activity android:name=".CustomerBasketActivity" />
+        <activity android:name=".ResellerMainPageActivity" />
+        <activity android:name=".ResellerAddBeerActivity" />
     </application>
 
 </manifest>
