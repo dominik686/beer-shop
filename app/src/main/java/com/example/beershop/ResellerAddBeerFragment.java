@@ -16,9 +16,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.beershop.database.BeerDataBaseHelper;
+import com.example.beershop.database.UserDataBaseHelper;
 import com.example.beershop.models.BeerBreweryModel;
 import com.example.beershop.models.BeerCategoryModel;
 import com.example.beershop.models.BeerModel;
+import com.example.beershop.models.ResellerModel;
+import com.example.beershop.singletons.CurrentUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,12 +32,14 @@ public class ResellerAddBeerFragment extends Fragment {
     TextView mBeerBreweryLabel;
     TextView mBeerCategoryLabel;
     TextView mBeerBarcodeLabel;
-    BeerDataBaseHelper beerDBHelper;
+    TextView mBeerQuantityLabel;
 
+    BeerDataBaseHelper mBeerDBHelper;
+    UserDataBaseHelper mUserDBHelper;
     EditText mBeerBarcode;
     EditText mBeerName;
     EditText mBeerImage;
-
+    EditText mBeerQuantity;
     Spinner mBeerBrewery;
     Spinner mBeerCategory;
 
@@ -64,19 +69,23 @@ public class ResellerAddBeerFragment extends Fragment {
         mBeerImageLabel = v.findViewById(R.id.image_label);
         mBeerBreweryLabel = v.findViewById(R.id.category_label);
         mBeerBarcodeLabel = v.findViewById(R.id.barcode_label);
+        mBeerQuantityLabel = v.findViewById(R.id.quanity_label);
 
         mBeerName = v.findViewById(R.id.et_beer_name);
         mBeerImage = v.findViewById(R.id.et_beer_image);
+        mBeerQuantity = v.findViewById(R.id.et_beer_quantity);
         mBeerBarcode = v.findViewById(R.id.et_beer_barcode);
         mBeerBrewery = v.findViewById(R.id.sp_beer_brewery);
         mBeerCategory = v.findViewById(R.id.sp_beer_category);
 
-        beerDBHelper = new BeerDataBaseHelper(getContext());
+        mBeerDBHelper = new BeerDataBaseHelper(getContext());
+        mUserDBHelper = new UserDataBaseHelper(getContext());
+
         mAddBeer = v.findViewById(R.id.add_beer_button);
 
         //Get categories and breweries from the db
-        List<BeerCategoryModel> categoryList = beerDBHelper.getAllCategories();
-        List<BeerBreweryModel> brewerylist = beerDBHelper.getAllBreweries();
+        List<BeerCategoryModel> categoryList = mBeerDBHelper.getAllCategories();
+        List<BeerBreweryModel> brewerylist = mBeerDBHelper.getAllBreweries();
 
         //Initialize adapters that contain the names of categories and breweries
         ArrayAdapter<String> categoryAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, getCategoryNames(categoryList));
@@ -85,6 +94,7 @@ public class ResellerAddBeerFragment extends Fragment {
         //Set the adapters
         mBeerCategory.setAdapter(categoryAdapter);
         mBeerBrewery.setAdapter(breweryAdapter);
+
 
 
         //When add button is pressed
@@ -99,6 +109,7 @@ public class ResellerAddBeerFragment extends Fragment {
                 BeerBreweryModel brewery = brewerylist.get(mBeerBrewery.getSelectedItemPosition());
                 int beerCategoryID = category.getBeerCategoryID();
                 int beerBreweryID = brewery.getBeerBreweryID();
+                int beerQuantity = Integer.parseInt(mBeerQuantity.getText().toString());
 
                 //Create a Beer data model from the data
                 BeerModel bm = new BeerModel(-1, beerNameString, beerImageString, beerBarcodeString,
@@ -113,22 +124,26 @@ public class ResellerAddBeerFragment extends Fragment {
                 }
                 if (TextUtils.isEmpty(beerBarcodeString)) {
                     mBeerBarcode.setError("Please put in the barcode.");
-                } else {
+                }
+                if (!TextUtils.isEmpty(beerBarcodeString) && !TextUtils.isEmpty(beerNameString)
+                        && !TextUtils.isEmpty(beerImageString)) {
+
                     //If the beer doesnt already exist, add it to the DB
-                    if (beerDBHelper.checkIfBeerExists(bm)) {
+                    if (!mBeerDBHelper.checkIfBeerExists(bm)) {
+                        mBeerDBHelper.addBeer(bm);
+                        CurrentUser currentUser = CurrentUser.getInstance(getContext());
+                        ResellerModel rm = currentUser.getResellerModel();
+                        mUserDBHelper.addBeerToInventory(rm, mBeerDBHelper.getBeerId(bm), beerQuantity);
+                        //Add the beer and the quantity to current users inventory, and then update
 
                     }
                 }
-
-                //   Are the boxes filled correctly?
-                //       Does the beer already exist?
-
-                //              Add the beer to the database
             }
         });
         return v;
     }
 
+    //Get names from the list of category models
     public List<String> getCategoryNames(List<BeerCategoryModel> list) {
         ArrayList<String> returnList = new ArrayList<>();
         for (BeerCategoryModel model : list
@@ -139,6 +154,7 @@ public class ResellerAddBeerFragment extends Fragment {
         return returnList;
     }
 
+    //Get names from the list of brewery models
     public List<String> getBreweryNames(List<BeerBreweryModel> list) {
         ArrayList<String> returnList = new ArrayList<>();
         for (BeerBreweryModel model : list

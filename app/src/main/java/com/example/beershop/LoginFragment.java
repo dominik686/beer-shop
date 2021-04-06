@@ -19,6 +19,7 @@ import com.example.beershop.database.BeerDataBaseHelper;
 import com.example.beershop.database.UserDataBaseHelper;
 import com.example.beershop.models.CustomerModel;
 import com.example.beershop.models.ResellerModel;
+import com.example.beershop.singletons.CurrentUser;
 
 public class LoginFragment extends Fragment {
     ImageView mImage;
@@ -79,6 +80,7 @@ public class LoginFragment extends Fragment {
                         //Search the customer table and if the username matches, log in
                         CustomerModel cm = new CustomerModel(-1, username, password);
                         if (mUserDBHelper.customerCredentialsCheck(cm)) {
+                            CurrentUser.getInstance(getContext(), cm);
                             Intent intent = new Intent(getActivity(), CustomerSellerListActivity.class);
                             startActivity(intent);
                         }
@@ -86,6 +88,7 @@ public class LoginFragment extends Fragment {
                         //Search the reseller table, and if the username matches, log in
                         ResellerModel rm = new ResellerModel(-1, username, password);
                         if (mUserDBHelper.resellerCredentialsCheck(rm)) {
+                            CurrentUser.getInstance(getContext(), rm);
                             Intent intent = new Intent(getActivity(), ResellerMainPageActivity.class);
                             startActivity(intent);
                         }

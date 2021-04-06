@@ -231,8 +231,6 @@ public class BeerDataBaseHelper extends SQLiteOpenHelper {
 
         cv.put(COLUMN_BEER_BREWERY_NAME, model.getBeerBreweryName());
         cv.put(COLUMN_BEER_BREWERY_DESCRIPTION, model.getBeerBreweryDescription());
-        //If the username alraedy exists in the db
-        //dont add and return false
         long insert = db.insert(BEER_BREWERY_TABLE, null, cv);
 
         return insert != -1;
@@ -256,29 +254,54 @@ public class BeerDataBaseHelper extends SQLiteOpenHelper {
 
     // Add a beer if it doesnt already exist
     public boolean addBeer(BeerModel model) {
-        if (!checkIfBeerExists(model)) {
+        if (checkIfBeerExists(model)) {
             return false;
         }
         SQLiteDatabase db = getWritableDatabase();
         String queryString = "";
+        ContentValues cv = new ContentValues();
 
-        return true;
+        cv.put(COLUMN_BEER_NAME, model.getBeerName());
+        cv.put(COLUMN_BEER_PICTURE, model.getBeerThumbnailName());
+        cv.put(COLUMN_BEER_BARCODE, model.getBarcode());
+        cv.put(COLUMN_BEER_BREWERY_ID, model.getBeerBreweryID());
+        cv.put(COLUMN_BEER_CATEGORY_ID, model.getBeerCategoryID());
+
+        long insert = db.insert(BEERS_TABLE, null, cv);
+
+        return insert != -1;
     }
 
     // Check if the beer doesnt already exist
     public boolean checkIfBeerExists(BeerModel model) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String queryString = "SELECT * FROM " + BEERS_TABLE + " WHERE " + COLUMN_BEER_ID + " = "
-                + "\"" + model.getBeerID() + " AND " + COLUMN_BEER_NAME + " = "
-                + "\"" + model.getBeerName() + " AND " + COLUMN_BEER_PICTURE + " = "
-                + "\"" + model.getBeerThumbnailName() + " AND " + COLUMN_BEER_BARCODE + " = " + model.getBarcode() +
-                " AND " + COLUMN_BEER_CATEGORY_ID + " = "
-                + "\"" + model.getBeerCategoryID() + " AND " + COLUMN_BEER_BREWERY_ID + " = "
-                + "\"" + model.getBeerID() + "\"";
+        String queryString = "SELECT * FROM " + BEERS_TABLE + " WHERE " + COLUMN_BEER_NAME + " = "
+                + "\"" + model.getBeerName() + "\"" + " AND " + COLUMN_BEER_PICTURE + " = "
+                + "\"" + model.getBeerThumbnailName() + "\"" + " AND " + COLUMN_BEER_BARCODE + " = " + "\"" + model.getBarcode() +
+                "\"" + " AND " + COLUMN_BEER_CATEGORY_ID + " = "
+                + model.getBeerCategoryID() + " AND " + COLUMN_BEER_BREWERY_ID + " = "
+                + model.getBeerBreweryID();
         Cursor cursor = db.rawQuery(queryString, null);
-        String d = " AND " + COLUMN_BEER_BARCODE + " = " + model.getBarcode();
         return cursor.moveToFirst();
     }
+
+    public int getBeerId(BeerModel model) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String queryString = "SELECT * FROM " + BEERS_TABLE + " WHERE " + COLUMN_BEER_NAME + " = "
+                + "\"" + model.getBeerName() + "\"" + " AND " + COLUMN_BEER_PICTURE + " = "
+                + "\"" + model.getBeerThumbnailName() + "\"" + " AND " + COLUMN_BEER_BARCODE + " = " + "\"" + model.getBarcode() +
+                "\"" + " AND " + COLUMN_BEER_CATEGORY_ID + " = "
+                + model.getBeerCategoryID() + " AND " + COLUMN_BEER_BREWERY_ID + " = "
+                + model.getBeerBreweryID();
+        Cursor cursor = db.rawQuery(queryString, null);
+        if (cursor.moveToFirst()) {
+            int result = cursor.getInt(0);
+            return result;
+        }
+
+        return -1;
+    }
+
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

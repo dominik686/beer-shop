@@ -130,10 +130,35 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
 
         cv.put(COLUMN_RESELLER_USERNAME, rm.getUsername());
         cv.put(COLUMN_RESELLER_PASSWORD, rm.getPassword());
+        cv.put(COLUMN_RESELLER_INVENTORY, "");
         long insert = db.insert(RESELLERS_TABLE, null, cv);
 
         return insert != -1;
 
+    }
+
+    //Add the beer to the resellers inventory
+    public boolean addBeerToInventory(ResellerModel rm, int beerID, int quantity) {
+        String newBeer = beerID + ":" + quantity + ",";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        String queryString = "SELECT * FROM " + RESELLERS_TABLE + " WHERE " + COLUMN_RESELLER_USERNAME + " = "
+                + "\"" + rm.getUsername() + "\"";
+        Cursor cursor = db.rawQuery(queryString, null);
+        cursor.moveToFirst();
+        String curs = cursor.getString(3);
+        String inventory = curs + newBeer;
+
+        queryString = "UPDATE " + RESELLERS_TABLE + " SET  " + COLUMN_RESELLER_INVENTORY + " = "
+                + "\"" + inventory + "\"" + " WHERE " + COLUMN_RESELLER_USERNAME + " = "
+                + "\"" + rm.getUsername() + "\"";
+
+        cursor = db.rawQuery(queryString, null);
+
+
+        return cursor.moveToFirst();
+        //Check if the beer doesnt already exist
+        //get the current column, and then concanete the newBeer to it, and then replace the column?
     }
 
     public boolean resellerUsernameCheck(ResellerModel rm) {
