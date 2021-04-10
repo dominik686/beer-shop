@@ -13,7 +13,7 @@ import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -24,7 +24,7 @@ import com.example.beershop.models.ResellerModel;
 import com.example.beershop.singletons.CurrentUser;
 
 public class LoginFragment extends Fragment {
-    private ConstraintLayout mLayout;
+
     private ImageView mImage;
     private EditText mUsername;
     private EditText mPassword;
@@ -47,7 +47,6 @@ public class LoginFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_login, container, false);
 
-        mLayout = v.findViewById(R.id.login_fragment_layout);
 
         animationView = v.findViewById(R.id.animation_view);
         animationView.playAnimation();
@@ -68,7 +67,9 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), CreateAccountActivity.class);
-                startActivity(intent);
+                Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getContext(),
+                        android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
+                startActivity(intent, bundle);
             }
         });
 
@@ -96,16 +97,22 @@ public class LoginFragment extends Fragment {
                         CustomerModel cm = new CustomerModel(-1, username, password);
                         if (mUserDBHelper.customerCredentialsCheck(cm)) {
                             CurrentUser.getInstance(getContext(), cm);
+
                             Intent intent = new Intent(getActivity(), CustomerSellerListActivity.class);
-                            startActivity(intent);
+                            Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getContext(),
+                                    android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
+                            startActivity(intent, bundle);
                         }
                     } else {
                         //Search the reseller table, and if the username matches, log in
                         ResellerModel rm = new ResellerModel(-1, username, password);
                         if (mUserDBHelper.resellerCredentialsCheck(rm)) {
                             CurrentUser.getInstance(getContext(), rm);
+
                             Intent intent = new Intent(getActivity(), ResellerMainPageActivity.class);
-                            startActivity(intent);
+                            Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getContext(),
+                                    android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
+                            startActivity(intent, bundle);
                         }
                     }
                 }

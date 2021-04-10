@@ -1,21 +1,25 @@
 package com.example.beershop;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.beershop.database.BeerDataBaseHelper;
 import com.example.beershop.database.UserDataBaseHelper;
 import com.example.beershop.models.BeerBreweryModel;
@@ -23,13 +27,14 @@ import com.example.beershop.models.BeerCategoryModel;
 import com.example.beershop.models.BeerModel;
 import com.example.beershop.singletons.CurrentSeller;
 import com.example.beershop.singletons.CurrentUser;
+import com.example.beershop.utils.AnimationHelper;
 
 import java.util.List;
 
 public class CustomerBrowseAllFragment extends Fragment {
     RecyclerView mBeerListRecyclerview;
-    Button mBasket;
-    Button mSignOut;
+    ImageButton mBasket;
+    ImageButton mSignOut;
 
     BeerDataBaseHelper mBeerDBHelper;
     UserDataBaseHelper mUserDBHelper;
@@ -49,9 +54,19 @@ public class CustomerBrowseAllFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_customer_browse_all, container, false);
         mBeerListRecyclerview = v.findViewById(R.id.beer_recyclerview);
-        mBasket = v.findViewById(R.id.basketButton);
+        mBasket = v.findViewById(R.id.basket_button);
         mSignOut = v.findViewById(R.id.buttonSignout);
 
+        mSignOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getContext(),
+                        android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
+                startActivity(intent, bundle);
+            }
+        });
         mBeerDBHelper = new BeerDataBaseHelper(getContext());
         mUserDBHelper = new UserDataBaseHelper(getContext());
 
@@ -101,8 +116,9 @@ public class CustomerBrowseAllFragment extends Fragment {
             private final TextView mBeerQuantity;
             private final TextView mBeerQuantityNumber;
             private final ImageView mBeerImage;
-            private final Button mAddButton;
+            private final ImageButton mAddButton;
             private final Context mContext;
+            private final LottieAnimationView mOKAnimation;
             private BeerModel mBeer;
 
             public BeerHolder(@NonNull View itemView, Context pContext) {
@@ -115,15 +131,39 @@ public class CustomerBrowseAllFragment extends Fragment {
                 mBeerQuantityNumber = itemView.findViewById(R.id.tv_quantity_number);
                 mBeerImage = itemView.findViewById(R.id.beerImage);
 
+                mOKAnimation = itemView.findViewById(R.id.ok_anim);
+
+
                 mAddButton = itemView.findViewById(R.id.removeFromBasketButton);
                 mAddButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
                         if (mBeer.getQuantity() == 0) {
-                            remove(getAdapterPosition(), itemView);
+                            Animation anim = AnimationUtils.loadAnimation(getContext(), R.anim.shrink_fade);
+                            anim.setDuration(500);
+                            itemView.startAnimation(anim);
+                            anim.setAnimationListener(new Animation.AnimationListener() {
+                                @Override
+                                public void onAnimationStart(Animation animation) {
+
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animation animation) {
+                                    remove(getAdapterPosition(), itemView);
+                                }
+
+                                @Override
+                                public void onAnimationRepeat(Animation animation) {
+
+                                }
+                            });
                         } else {
-                            Toast.makeText(getActivity(), "Beer added to the basket!", Toast.LENGTH_LONG).show();
+                            mOKAnimation.playAnimation();
+                            AnimationHelper.shake(itemView);
+
+
                             BeerModel tempBeer = mBeer.copy();
                             mBeer.getQuantity();
                             // Change the quantity of beer to 1, and add it to the basket singleton
@@ -153,6 +193,7 @@ public class CustomerBrowseAllFragment extends Fragment {
                 mBeer.addQuantity(numb);
                 int currQuantity = Integer.parseInt(mBeerQuantityNumber.getText().toString());
                 mBeerQuantityNumber.setText(Integer.toString(currQuantity + numb));
+
                 //Find a way to update the quantity
                 //probably just add a new textview for quantity instead of appending
             }
@@ -163,6 +204,7 @@ public class CustomerBrowseAllFragment extends Fragment {
                 notifyItemRangeChanged(position, mBeers.size());
                 itemView.setVisibility(View.GONE);
             }
+
 
         }
     }

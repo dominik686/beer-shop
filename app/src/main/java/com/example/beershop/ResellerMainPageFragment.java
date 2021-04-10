@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -67,7 +68,9 @@ public class ResellerMainPageFragment extends Fragment {
             public void onClick(View v) {
                 getActivity().finish();
                 Intent intent = new Intent(getActivity(), ResellerAddBeerActivity.class);
-                startActivity(intent);
+                Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getContext(),
+                        android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
+                startActivity(intent, bundle);
             }
         });
 

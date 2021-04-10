@@ -6,16 +6,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 
 import java.util.Objects;
 
 public class CustomerShopPageFragment extends Fragment {
-    Button mSignOutButton;
-    Button mBasketButton;
+    ImageButton mSignOutButton;
+    ImageButton mBasketButton;
     Button mCategoriesButton;
     Button mBrowseAllButton;
     Button mScanBarcodeButton;
@@ -40,16 +42,20 @@ public class CustomerShopPageFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getContext(),
+                        android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
+                startActivity(intent, bundle);
             }
         });
-        mBasketButton = v.findViewById(R.id.basketButton);
+        mBasketButton = v.findViewById(R.id.basket_button);
         mBasketButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), CustomerBasketActivity.class);
-                startActivity(intent);
+                Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getContext(),
+                        android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
+                startActivity(intent, bundle);
             }
         });
         mCategoriesButton = v.findViewById(R.id.browseAllButton);
@@ -58,7 +64,9 @@ public class CustomerShopPageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), CustomerBrowseAllActivity.class);
-                startActivity(intent);
+                Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getContext(),
+                        android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
+                startActivity(intent, bundle);
             }
         });
         mScanBarcodeButton = v.findViewById(R.id.scanBarcodeButton);

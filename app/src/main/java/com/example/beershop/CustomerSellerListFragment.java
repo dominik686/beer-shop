@@ -7,11 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,7 +25,7 @@ import com.example.beershop.singletons.CurrentSeller;
 import java.util.List;
 
 public class CustomerSellerListFragment extends Fragment {
-    Button mSignoutButton;
+    ImageButton mSignoutButton;
     RecyclerView mSellerListRecyclerView;
     UserDataBaseHelper mDBHelper;
     List<ResellerModel> mResellers;
@@ -41,6 +43,16 @@ public class CustomerSellerListFragment extends Fragment {
         mSellerListRecyclerView = v.findViewById(R.id.seller_list_recyclerview);
         mResellers = mDBHelper.getAllResellers();
         mSignoutButton = v.findViewById(R.id.buttonSignout);
+        mSignoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getContext(),
+                        android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
+                startActivity(intent, bundle);
+            }
+        });
         mSellerListRecyclerView.setAdapter(new SellerListAdapter(mResellers));
         mSellerListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mDBHelper = new UserDataBaseHelper(getContext());
@@ -105,7 +117,9 @@ public class CustomerSellerListFragment extends Fragment {
                     public void onClick(View v) {
                         CurrentSeller.getInstance(getContext(), mReseller);
                         Intent intent = new Intent(getContext(), CustomerShopPageActivity.class);
-                        startActivity(intent);
+                        Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getContext(),
+                                android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
+                        startActivity(intent, bundle);
                     }
                 });
             }

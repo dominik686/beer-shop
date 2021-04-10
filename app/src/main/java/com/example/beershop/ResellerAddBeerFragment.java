@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.beershop.database.BeerDataBaseHelper;
@@ -140,7 +141,10 @@ public class ResellerAddBeerFragment extends Fragment {
                         Toast.makeText(getContext(), "Your beer has been added!", Toast.LENGTH_SHORT).show();
                         getActivity().finish();
                         Intent intent = new Intent(getActivity(), ResellerMainPageActivity.class);
-                        startActivity(intent);
+
+                        Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getContext(),
+                                android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
+                        startActivity(intent, bundle);
                     }
                 }
             }

@@ -1,6 +1,7 @@
 package com.example.beershop;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,12 +9,13 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,7 +32,7 @@ import com.example.beershop.singletons.CurrentUser;
 
 public class CustomerBasketFragment extends Fragment {
     RecyclerView mBasketList;
-    Button mSignOutButton;
+    ImageButton mSignOutButton;
     Button mBuyButton;
     CurrentSeller mCurrentSeller;
     CurrentUser mCurrentUser;
@@ -49,7 +51,16 @@ public class CustomerBasketFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_customer_basket, container, false);
         mSignOutButton = v.findViewById(R.id.buttonSignout);
         mBasketList = v.findViewById(R.id.basketList);
-
+        mSignOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getContext(),
+                        android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
+                startActivity(intent, bundle);
+            }
+        });
         mBuyButton = v.findViewById(R.id.buy_button);
         mCurrentSeller = CurrentSeller.getInstance(getContext());
         mCurrentUser = CurrentUser.getInstance(getContext());
@@ -75,6 +86,7 @@ public class CustomerBasketFragment extends Fragment {
                 BasketListAdapter adapter = (BasketListAdapter) mBasketList.getAdapter();
                 BasketModel basketCopy = adapter.mBasketModel;
                 mUserDBHelper.removeFromInventory(basketCopy.getBeers(), mCurrentSeller.getResellerModel());
+
                 Animation anim = AnimationUtils.loadAnimation(getContext(), R.anim.shrink_fade);
                 mBasketList.startAnimation(anim);
                 anim.setAnimationListener(new Animation.AnimationListener() {
@@ -141,7 +153,7 @@ public class CustomerBasketFragment extends Fragment {
             private final TextView mBeerQuantityNumber;
 
             private final ImageView mBeerImage;
-            private final Button mRemoveButton;
+            private final ImageButton mRemoveButton;
             private final Context mContext;
             private BeerModel mBeer;
 
@@ -158,7 +170,9 @@ public class CustomerBasketFragment extends Fragment {
 
 
                 mRemoveButton = itemView.findViewById(R.id.removeFromBasketButton);
-                mRemoveButton.setText("Remove");
+                mRemoveButton.setBackgroundResource(android.R.color.transparent);
+                mRemoveButton.setImageResource(R.drawable.minus);
+
                 mRemoveButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -166,8 +180,25 @@ public class CustomerBasketFragment extends Fragment {
 
 
                         if (mBeer.getQuantity() == 0) {
-                            Toast.makeText(getActivity(), "Beer Removed!", Toast.LENGTH_LONG).show();
-                            remove(getAdapterPosition(), itemView);
+                            Animation anim = AnimationUtils.loadAnimation(getContext(), R.anim.shrink_fade);
+                            anim.setDuration(500);
+                            itemView.startAnimation(anim);
+                            anim.setAnimationListener(new Animation.AnimationListener() {
+                                @Override
+                                public void onAnimationStart(Animation animation) {
+
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animation animation) {
+                                    remove(getAdapterPosition(), itemView);
+                                }
+
+                                @Override
+                                public void onAnimationRepeat(Animation animation) {
+
+                                }
+                            });
                         }
 
                     }
