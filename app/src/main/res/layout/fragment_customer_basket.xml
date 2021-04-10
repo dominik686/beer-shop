@@ -8,24 +8,38 @@
         android:id="@+id/include5"
         layout="@layout/button_sign_out" />
 
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/confetti"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_autoPlay="false"
+        app:lottie_loop="true"
+        app:lottie_url="https://assets10.lottiefiles.com/packages/lf20_u4yrau.json" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/basketList"
-        android:layout_width="417dp"
-        android:layout_height="669dp"
-        android:layout_marginTop="69dp"
+        android:layout_width="399dp"
+        android:layout_height="365dp"
+        android:layout_marginTop="136dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.089"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/checkOutButton"
+        android:id="@+id/buy_button"
         android:layout_width="125dp"
         android:layout_height="46dp"
-        android:layout_marginTop="16dp"
-        android:text="Check Out"
+        android:text="Buy"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintHorizontal_bias="0.944"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.976" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

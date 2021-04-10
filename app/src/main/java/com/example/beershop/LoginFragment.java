@@ -13,8 +13,10 @@ import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.beershop.database.BeerDataBaseHelper;
 import com.example.beershop.database.UserDataBaseHelper;
 import com.example.beershop.models.CustomerModel;
@@ -22,14 +24,17 @@ import com.example.beershop.models.ResellerModel;
 import com.example.beershop.singletons.CurrentUser;
 
 public class LoginFragment extends Fragment {
-    ImageView mImage;
-    EditText mUsername;
-    EditText mPassword;
-    Button mCreateAccountButton;
-    Button mLoginButton;
-    Switch mCustomerSwitch;
-    UserDataBaseHelper mUserDBHelper;
-    BeerDataBaseHelper mBeerDBHelper;
+    private ConstraintLayout mLayout;
+    private ImageView mImage;
+    private EditText mUsername;
+    private EditText mPassword;
+    private LottieAnimationView animationView;
+
+    private Button mCreateAccountButton;
+    private Button mLoginButton;
+    private Switch mCustomerSwitch;
+    private UserDataBaseHelper mUserDBHelper;
+    private BeerDataBaseHelper mBeerDBHelper;
 
     public static LoginFragment newInstance() {
         LoginFragment fragment = new LoginFragment();
@@ -42,13 +47,22 @@ public class LoginFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_login, container, false);
 
+        mLayout = v.findViewById(R.id.login_fragment_layout);
+
+        animationView = v.findViewById(R.id.animation_view);
+        animationView.playAnimation();
+
+        boolean check = animationView.isAnimating();
         mCustomerSwitch = v.findViewById(R.id.sw_customer);
         mImage = v.findViewById(R.id.logoImage);
         mUsername = v.findViewById(R.id.username);
         mPassword = v.findViewById(R.id.password);
+
+
         mUserDBHelper = new UserDataBaseHelper(getContext());
         mBeerDBHelper = new BeerDataBaseHelper(getContext());
         mBeerDBHelper.addDefaultValues();
+
         mCreateAccountButton = v.findViewById(R.id.loginCreateAccountButton);
         mCreateAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,6 +71,7 @@ public class LoginFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
         mLoginButton = v.findViewById(R.id.loginButton);
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,6 +114,7 @@ public class LoginFragment extends Fragment {
 
         return v;
     }
+
 }
 
 //TODO:

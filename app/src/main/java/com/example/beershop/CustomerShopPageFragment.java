@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import java.util.Objects;
+
 public class CustomerShopPageFragment extends Fragment {
     Button mSignOutButton;
     Button mBasketButton;
@@ -18,10 +20,6 @@ public class CustomerShopPageFragment extends Fragment {
     Button mBrowseAllButton;
     Button mScanBarcodeButton;
     Button mGoBackButton;
-    /*
-    TODO:
-    -transfer the customer model from the previous fragment?
-    */
 
     public static CustomerShopPageFragment newInstance() {
 
@@ -69,7 +67,7 @@ public class CustomerShopPageFragment extends Fragment {
         mGoBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().finish();
+                Objects.requireNonNull(getActivity()).finish();
             }
         });
 

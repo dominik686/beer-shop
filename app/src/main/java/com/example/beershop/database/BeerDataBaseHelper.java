@@ -142,6 +142,23 @@ public class BeerDataBaseHelper extends SQLiteOpenHelper {
 
     }
 
+    public BeerCategoryModel getCategory(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String queryString = "SELECT * FROM " + BEER_CATEGORIES_TABLE + " WHERE " + COLUMN_BEER_CATEGORY_ID +
+                " = " + id;
+        Cursor cursor = db.rawQuery(queryString, null);
+
+        if (cursor.moveToFirst()) {
+
+            String name = cursor.getString(1);
+            String desc = cursor.getString(2);
+            return new BeerCategoryModel(id, name, desc);
+        }
+
+        return null;
+    }
+
     // Look for the category with the same name and return its id (if it exists)
     public int getIdFromCategoryName(String categoryName) {
         /*
@@ -216,6 +233,25 @@ public class BeerDataBaseHelper extends SQLiteOpenHelper {
 
     }
 
+    public BeerBreweryModel getBrewery(int id) {
+        String query = "SELECT * FROM " + BEER_BREWERY_TABLE + " WHERE " + COLUMN_BEER_BREWERY_ID + " = "
+                + id;
+        SQLiteDatabase db = getReadableDatabase();
+
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            String breweryName = cursor.getString(1);
+            String breweryDescription = cursor.getString(2);
+
+            BeerBreweryModel model = new BeerBreweryModel(id, breweryName, breweryDescription);
+            return model;
+        }
+
+        return null;
+    }
+
     //Return true if brewery added suscessfuly
     //otherwise return false
     public boolean addBrewery(BeerBreweryModel model) {
@@ -257,7 +293,7 @@ public class BeerDataBaseHelper extends SQLiteOpenHelper {
         if (checkIfBeerExists(model)) {
             return false;
         }
-        SQLiteDatabase db = getWritableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         String queryString = "";
         ContentValues cv = new ContentValues();
 
@@ -285,6 +321,21 @@ public class BeerDataBaseHelper extends SQLiteOpenHelper {
         return cursor.moveToFirst();
     }
 
+    public BeerModel getBeer(int id) {
+        String queryStirng = "SELECT * FROM " + BEERS_TABLE + " WHERE " + COLUMN_BEER_ID + " = " +
+                id;
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery(queryStirng, null);
+
+        cursor.moveToFirst();
+
+        BeerModel bm = new BeerModel(cursor.getInt(0), cursor.getString(1),
+                cursor.getString(2), cursor.getInt(3), cursor.getInt(4),
+                cursor.getString(5));
+
+        return bm;
+    }
+
     public int getBeerId(BeerModel model) {
         SQLiteDatabase db = this.getReadableDatabase();
         String queryString = "SELECT * FROM " + BEERS_TABLE + " WHERE " + COLUMN_BEER_NAME + " = "
@@ -300,6 +351,26 @@ public class BeerDataBaseHelper extends SQLiteOpenHelper {
         }
 
         return -1;
+    }
+
+    public List<BeerModel> getBeerListFromInventory(String pInventory) {
+        //Turn the inventory into a list of split strings
+        //Then use that list to get a list of beermodels
+
+        String[] beersString = pInventory.split(",");
+        ArrayList<BeerModel> returnList = new ArrayList<>();
+        for (String beer : beersString) {
+            String id = beer.substring(0, beer.indexOf(':'));
+
+
+            String quantity = beer.substring(beer.indexOf(':') + 1);
+
+            BeerModel bm = getBeer(Integer.parseInt(id));
+            bm.setQuantity(Integer.parseInt(quantity));
+            returnList.add(bm);
+
+        }
+        return returnList;
     }
 
 

@@ -47,8 +47,8 @@ public class CurrentUser {
         return mResellerUser;
     }
 
-    public ResellerModel getCustomerModel() {
-        return mResellerUser;
+    public CustomerModel getCustomerModel() {
+        return mCustomerUser;
     }
 
 }

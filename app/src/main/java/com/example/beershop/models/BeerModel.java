@@ -2,14 +2,15 @@ package com.example.beershop.models;
 
 //This is the data model class for beers
 public class BeerModel {
-    int mBeerID; // Unique ID for the record
-    String mBeerName;
-    String mBeerThumbnailName; // String for the pictures
-    String mBarcode; //Barcode of the beer
-    int mBeerCategoryID; // ID of the beer category
-    int mBeerBreweryID; // ID for the brewery
+    private int mBeerID; // Unique ID for the record
+    private String mBeerName;
+    private String mBeerThumbnailName; // String for the pictures
+    private String mBarcode; //Barcode of the beer
+    private int mBeerCategoryID; // ID of the beer category
+    private int mBeerBreweryID; // ID for the brewery
+    private int mBeerQuantity = 1;
 
-    public BeerModel(int mBeerID, String mBeerName, String mBeerThumbnailName, String mBarcode, int mBeerCategoryID, int mBeerBreweryID) {
+    public BeerModel(int mBeerID, String mBeerName, String mBeerThumbnailName, int mBeerCategoryID, int mBeerBreweryID, String mBarcode) {
         this.mBeerID = mBeerID;
         this.mBeerName = mBeerName;
         this.mBeerThumbnailName = mBeerThumbnailName;
@@ -18,8 +19,25 @@ public class BeerModel {
         this.mBeerBreweryID = mBeerBreweryID;
     }
 
+    public BeerModel(int mBeerID, int mBeerQuantity) {
+        this.mBeerID = mBeerID;
+        this.mBeerQuantity = mBeerQuantity;
+    }
+
     public BeerModel() {
 
+    }
+
+    public void addQuantity(int number) {
+        mBeerQuantity += number;
+    }
+
+    public int getQuantity() {
+        return mBeerQuantity;
+    }
+
+    public void setQuantity(int quantity) {
+        mBeerQuantity = quantity;
     }
 
     public String getBarcode() {
@@ -69,5 +87,7 @@ public class BeerModel {
         this.mBeerBreweryID = mBeerBreweryID;
     }
 
-
+    public BeerModel copy() {
+        return new BeerModel(mBeerID, mBeerName, mBeerThumbnailName, mBeerCategoryID, getBeerBreweryID(), mBarcode);
+    }
 }

@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.beershop.database.UserDataBaseHelper;
 import com.example.beershop.models.ResellerModel;
+import com.example.beershop.singletons.CurrentSeller;
 
 import java.util.List;
 
@@ -74,7 +75,8 @@ public class CustomerSellerListFragment extends Fragment {
         /* Get element from your dataset at this position and replace  the contents of the view
         with that element
          */
-            holder.mSellerName.setText(mResellers.get(position).getUsername());
+            holder.mReseller = mResellers.get(position);
+            holder.mSellerName.setText(holder.mReseller.getUsername());
         }
 
         // Return the size of the dataset (invoked by the layout manager)
@@ -101,6 +103,7 @@ public class CustomerSellerListFragment extends Fragment {
                 mVisitButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        CurrentSeller.getInstance(getContext(), mReseller);
                         Intent intent = new Intent(getContext(), CustomerShopPageActivity.class);
                         startActivity(intent);
                     }

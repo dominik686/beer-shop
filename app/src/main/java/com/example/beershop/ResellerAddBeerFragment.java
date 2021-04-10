@@ -1,5 +1,6 @@
 package com.example.beershop;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -112,8 +114,8 @@ public class ResellerAddBeerFragment extends Fragment {
                 int beerQuantity = Integer.parseInt(mBeerQuantity.getText().toString());
 
                 //Create a Beer data model from the data
-                BeerModel bm = new BeerModel(-1, beerNameString, beerImageString, beerBarcodeString,
-                        beerCategoryID, beerBreweryID);
+                BeerModel bm = new BeerModel(-1, beerNameString, beerImageString,
+                        beerCategoryID, beerBreweryID, beerBarcodeString);
 
                 //Are all of the boxes filled?
                 if (TextUtils.isEmpty(beerImageString)) {
@@ -133,9 +135,12 @@ public class ResellerAddBeerFragment extends Fragment {
                         mBeerDBHelper.addBeer(bm);
                         CurrentUser currentUser = CurrentUser.getInstance(getContext());
                         ResellerModel rm = currentUser.getResellerModel();
+                        //Delete the activity and make a toast to notife the user
                         mUserDBHelper.addBeerToInventory(rm, mBeerDBHelper.getBeerId(bm), beerQuantity);
-                        //Add the beer and the quantity to current users inventory, and then update
-
+                        Toast.makeText(getContext(), "Your beer has been added!", Toast.LENGTH_SHORT).show();
+                        getActivity().finish();
+                        Intent intent = new Intent(getActivity(), ResellerMainPageActivity.class);
+                        startActivity(intent);
                     }
                 }
             }
@@ -164,4 +169,8 @@ public class ResellerAddBeerFragment extends Fragment {
 
         return returnList;
     }
+
+    //TODO:
+    //-app crashes when trying to get inventory that doesnt exist (empty string)
+    //maybe try adding a check somewhere in the methods, that when inventory equals "" dont do anything
 }

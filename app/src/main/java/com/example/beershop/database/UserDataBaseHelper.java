@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import com.example.beershop.models.BeerModel;
 import com.example.beershop.models.CustomerModel;
 import com.example.beershop.models.ResellerModel;
 
@@ -138,29 +139,87 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
     }
 
     //Add the beer to the resellers inventory
-    public boolean addBeerToInventory(ResellerModel rm, int beerID, int quantity) {
+    public long addBeerToInventory(ResellerModel rm, int beerID, int quantity) {
         String newBeer = beerID + ":" + quantity + ",";
 
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         String queryString = "SELECT * FROM " + RESELLERS_TABLE + " WHERE " + COLUMN_RESELLER_USERNAME + " = "
-                + "\"" + rm.getUsername() + "\"";
+                + "'" + rm.getUsername() + "'";
         Cursor cursor = db.rawQuery(queryString, null);
         cursor.moveToFirst();
         String curs = cursor.getString(3);
         String inventory = curs + newBeer;
-
-        queryString = "UPDATE " + RESELLERS_TABLE + " SET  " + COLUMN_RESELLER_INVENTORY + " = "
-                + "\"" + inventory + "\"" + " WHERE " + COLUMN_RESELLER_USERNAME + " = "
-                + "\"" + rm.getUsername() + "\"";
-
-        cursor = db.rawQuery(queryString, null);
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_RESELLER_INVENTORY, inventory);
 
 
-        return cursor.moveToFirst();
+        long res = db.update(RESELLERS_TABLE, cv, COLUMN_RESELLER_USERNAME + "=?", new String[]{rm.getUsername()});
+        return res;
+
         //Check if the beer doesnt already exist
         //get the current column, and then concanete the newBeer to it, and then replace the column?
     }
 
+    public boolean updateInventory(String inventory, ResellerModel rm) {
+        ContentValues cv = new ContentValues();
+        SQLiteDatabase db = this.getWritableDatabase();
+        cv.put(COLUMN_RESELLER_INVENTORY, inventory);
+        long res = db.update(RESELLERS_TABLE, cv, COLUMN_RESELLER_USERNAME + "=?",
+                new String[]{rm.getUsername()});
+
+        return res != -1;
+    }
+
+    public boolean removeFromInventory(List<BeerModel> beers, ResellerModel rm) {
+        // Get current inventory string
+        // loop over it and modify it with beers changed values?
+        // and then update the inventory
+        String oldInventory = getInventory(rm);
+        String[] beersString = oldInventory.split(",");
+        ArrayList<BeerModel> newBeers = new ArrayList<>();
+        for (String beer : beersString) {
+            String id = beer.substring(0, beer.indexOf(':'));
+
+
+            String quantity = beer.substring(beer.indexOf(':') + 1);
+
+            BeerModel bm = new BeerModel(Integer.parseInt(id), Integer.parseInt(quantity));
+
+            newBeers.add(bm);
+        }
+
+        String newInventory = "";
+        for (int i = 0; i < newBeers.size(); i++) {
+            BeerModel beer1 = newBeers.get(i);
+            for (BeerModel beer2 : beers) {
+                if (beer1.getBeerID() == beer2.getBeerID()) {
+                    int beer1Quantity = beer1.getQuantity();
+                    int beer2Quantity = beer2.getQuantity();
+
+                    beer1Quantity = beer1Quantity - beer2Quantity;
+                    beer1.setQuantity(beer1Quantity);
+                    newBeers.set(i, beer1);
+                }
+
+            }
+            // Turn newBeers into an inventory String
+            newInventory += (beer1.getBeerID() + ":" + beer1.getQuantity() + ",");
+
+
+            // Turn newBeers into an inventory String
+
+        }
+
+        // update resellers inventory
+        boolean res = updateInventory(newInventory, rm);
+        return true;
+
+        // for each item in oldInventory
+        //    check if any of the beers are the item
+        //       If they are, remove the quantity from beers
+    }
+
+    // Check if the username already exists
     public boolean resellerUsernameCheck(ResellerModel rm) {
         SQLiteDatabase db = this.getReadableDatabase();
         String queryString = "SELECT * FROM " + RESELLERS_TABLE + " WHERE " + COLUMN_RESELLER_USERNAME + " = "
@@ -168,6 +227,18 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(queryString, null);
 
         return cursor.moveToFirst();
+    }
+
+    //Get inventory
+    public String getInventory(ResellerModel rm) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String queryString = "SELECT " + COLUMN_RESELLER_INVENTORY + " FROM " + RESELLERS_TABLE +
+                " WHERE " + COLUMN_RESELLER_USERNAME + " = "
+                + "\"" + rm.getUsername() + "\"";
+        Cursor cursor = db.rawQuery(queryString, null);
+        cursor.moveToFirst();
+
+        return cursor.getString(0);
     }
 
     public List<ResellerModel> getAllResellers() {
@@ -182,7 +253,7 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
                 int resellerID = cursor.getInt(0);
                 String resellerUsername = cursor.getString(1);
                 String resellerPassword = cursor.getString(2);
-                String resellerInventory = "";
+                String resellerInventory = cursor.getString(3);
 
                 ResellerModel newReseller = new ResellerModel(resellerID, resellerUsername, resellerPassword
                         , resellerInventory);

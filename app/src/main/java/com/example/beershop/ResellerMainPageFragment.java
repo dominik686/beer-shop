@@ -2,20 +2,39 @@ package com.example.beershop;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.beershop.database.BeerDataBaseHelper;
+import com.example.beershop.database.UserDataBaseHelper;
+import com.example.beershop.models.BeerBreweryModel;
+import com.example.beershop.models.BeerCategoryModel;
+import com.example.beershop.models.BeerModel;
+import com.example.beershop.models.ResellerModel;
+import com.example.beershop.singletons.CurrentUser;
+
+import java.util.List;
 
 public class ResellerMainPageFragment extends Fragment {
     Button mAddNewBeersButton;
     Button mCheckSalesButton;
+
     RecyclerView mInventoryRecyclerview;
+
+    CurrentUser mCurrentUser;
+    BeerDataBaseHelper mBeerDBHelper;
+    UserDataBaseHelper mUserDBHelper;
 
     public static ResellerMainPageFragment newInstance() {
 
@@ -39,15 +58,29 @@ public class ResellerMainPageFragment extends Fragment {
         mCheckSalesButton = v.findViewById(R.id.button_check_sales);
         mInventoryRecyclerview = v.findViewById(R.id.rv_inventory);
 
+        mUserDBHelper = new UserDataBaseHelper(getContext());
+        mCurrentUser = CurrentUser.getInstance(getContext());
+        mBeerDBHelper = new BeerDataBaseHelper(getContext());
+
         mAddNewBeersButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                getActivity().finish();
                 Intent intent = new Intent(getActivity(), ResellerAddBeerActivity.class);
                 startActivity(intent);
             }
         });
-        mInventoryRecyclerview.setAdapter(new InventoryAdapter());
 
+        ResellerModel rm = mCurrentUser.getResellerModel();
+        //Only get the inventory if its not empty
+        String inventory = mUserDBHelper.getInventory(rm);
+        if (TextUtils.isEmpty(inventory)) {
+
+        } else {
+            List<BeerModel> beerModelList = mBeerDBHelper.getBeerListFromInventory(inventory);
+            mInventoryRecyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
+            mInventoryRecyclerview.setAdapter(new InventoryAdapter(beerModelList));
+        }
 
         return v;
     }
@@ -55,6 +88,11 @@ public class ResellerMainPageFragment extends Fragment {
 
     public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.InventoryHolder> {
 
+        List<BeerModel> mBeerList;
+
+        public InventoryAdapter(List<BeerModel> beerModelList) {
+            mBeerList = beerModelList;
+        }
 
         @NonNull
         @Override
@@ -66,18 +104,60 @@ public class ResellerMainPageFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull InventoryHolder holder, int position) {
-
+            holder.bindBeer(mBeerList.get(position));
         }
 
         @Override
         public int getItemCount() {
-            return 0;
+            return mBeerList.size();
         }
 
         public class InventoryHolder extends RecyclerView.ViewHolder {
+            TextView mBeerNameLabel;
+            TextView mBeerCategoryLabel;
+            TextView mBeerBreweryLabel;
+            TextView mBeerQuantityLabel;
+            TextView mBeerBarcodeLabel;
+            ImageView mBeerThumnbnail;
+            BeerModel mBeerModel;
+            BeerCategoryModel mBeerCategoryModel;
+            BeerBreweryModel mBeerBreweryModel;
 
-            public InventoryHolder(@NonNull View itemView) {
-                super(itemView);
+            TextView mBeerBarcode;
+            TextView mBeerName;
+            TextView mBeerCategory;
+            TextView mBeerBrewery;
+            TextView mBeerQuantity;
+
+            public InventoryHolder(@NonNull View v) {
+                super(v);
+                mBeerNameLabel = v.findViewById(R.id.tv_beer_name_label);
+                mBeerCategoryLabel = v.findViewById(R.id.tv_beer_category_label);
+                mBeerBreweryLabel = v.findViewById(R.id.tv_brewery_label);
+                mBeerQuantityLabel = v.findViewById(R.id.tv_stock_number_label);
+                mBeerBarcodeLabel = v.findViewById(R.id.tv_barcode_label);
+
+                mBeerThumnbnail = v.findViewById(R.id.iv_beer_picture);
+
+                mBeerBarcode = v.findViewById(R.id.tv_barcode);
+                mBeerName = v.findViewById(R.id.tv_name);
+                mBeerCategory = v.findViewById(R.id.tv_category);
+                mBeerBrewery = v.findViewById(R.id.tv_brewery);
+                mBeerQuantity = v.findViewById(R.id.tv_quantity);
+
+            }
+
+            public void bindBeer(BeerModel bm) {
+                mBeerModel = bm;
+
+                mBeerCategoryModel = mBeerDBHelper.getCategory(bm.getBeerCategoryID());
+                mBeerBreweryModel = mBeerDBHelper.getBrewery(bm.getBeerBreweryID());
+
+                mBeerName.setText(bm.getBeerName());
+                mBeerCategory.setText(mBeerCategoryModel.getBeerCategoryName());
+                mBeerBrewery.setText(mBeerBreweryModel.getBeerBreweryName());
+                mBeerQuantity.setText(String.valueOf(bm.getQuantity()));
+                mBeerBarcode.setText(bm.getBarcode());
             }
         }
     }

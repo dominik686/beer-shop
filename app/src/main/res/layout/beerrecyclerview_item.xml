@@ -4,25 +4,57 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+
+    <TextView
+        android:id="@+id/tv_beer_brewery"
+        android:layout_width="82dp"
+        android:layout_height="61dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="16dp"
+        android:text="beer brewery"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/removeFromBasketButton"
+        app:layout_constraintHorizontal_bias="0.937"
+        app:layout_constraintStart_toEndOf="@+id/beerImage"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_beer_category"
+        android:layout_width="123dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="50dp"
+        android:text="Beer category"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/removeFromBasketButton"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/beerImage"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.111" />
+
     <ImageView
         android:id="@+id/beerImage"
-        android:layout_width="73dp"
-        android:layout_height="67dp"
+        android:layout_width="77dp"
+        android:layout_height="75dp"
         android:layout_marginStart="4dp"
         android:layout_marginLeft="4dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_menu_gallery" />
 
     <TextView
-        android:id="@+id/beerName"
-        android:layout_width="211dp"
-        android:layout_height="33dp"
+        android:id="@+id/tv_beer_name"
+        android:layout_width="123dp"
+        android:layout_height="24dp"
         android:layout_marginStart="12dp"
         android:layout_marginLeft="12dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:text="Beer name"
+        android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/removeFromBasketButton"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/beerImage"
@@ -32,10 +64,36 @@
         android:id="@+id/removeFromBasketButton"
         android:layout_width="77dp"
         android:layout_height="52dp"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginRight="12dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:text="ADD"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_quantity1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Quantity: "
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.263"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_beer_category" />
+
+    <TextView
+        android:id="@+id/tv_quantity_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/tv_quantity1"
+        app:layout_constraintTop_toBottomOf="@+id/tv_beer_category" />
 </androidx.constraintlayout.widget.ConstraintLayout>
