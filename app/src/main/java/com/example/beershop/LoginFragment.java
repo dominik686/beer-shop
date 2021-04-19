@@ -22,6 +22,7 @@ import com.example.beershop.database.UserDataBaseHelper;
 import com.example.beershop.models.CustomerModel;
 import com.example.beershop.models.ResellerModel;
 import com.example.beershop.singletons.CurrentUser;
+import com.example.beershop.utils.AnimationHelper;
 
 public class LoginFragment extends Fragment {
 
@@ -51,7 +52,6 @@ public class LoginFragment extends Fragment {
         animationView = v.findViewById(R.id.animation_view);
         animationView.playAnimation();
 
-        boolean check = animationView.isAnimating();
         mCustomerSwitch = v.findViewById(R.id.sw_customer);
         mImage = v.findViewById(R.id.logoImage);
         mUsername = v.findViewById(R.id.username);
@@ -66,6 +66,7 @@ public class LoginFragment extends Fragment {
         mCreateAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AnimationHelper.bounce(mCreateAccountButton);
                 Intent intent = new Intent(getActivity(), CreateAccountActivity.class);
                 Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getContext(),
                         android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
@@ -77,6 +78,10 @@ public class LoginFragment extends Fragment {
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //YoYo.with(Techniques.Wave).duration(700).playOn(v);
+                AnimationHelper.bounce(mLoginButton);
+
                 //If username or password box is empty
                 //Tell the user to fill both boxes
                 String username = mUsername.getText().toString();
@@ -84,8 +89,10 @@ public class LoginFragment extends Fragment {
 
                 if (TextUtils.isEmpty(username)) {
                     mUsername.setError("Please put in your username.");
+                    AnimationHelper.shake(mUsername);
                 }
                 if (TextUtils.isEmpty(password)) {
+                    AnimationHelper.shake(mPassword);
                     mPassword.setError("Please put in your password.");
                 } else {
 

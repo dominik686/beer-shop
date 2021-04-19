@@ -1,5 +1,7 @@
 package com.example.beershop;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -24,6 +26,7 @@ import com.example.beershop.models.BeerCategoryModel;
 import com.example.beershop.models.BeerModel;
 import com.example.beershop.models.ResellerModel;
 import com.example.beershop.singletons.CurrentUser;
+import com.example.beershop.utils.AnimationHelper;
 
 import java.util.List;
 
@@ -59,6 +62,7 @@ public class ResellerMainPageFragment extends Fragment {
         mCheckSalesButton = v.findViewById(R.id.button_check_sales);
         mInventoryRecyclerview = v.findViewById(R.id.rv_inventory);
 
+
         mUserDBHelper = new UserDataBaseHelper(getContext());
         mCurrentUser = CurrentUser.getInstance(getContext());
         mBeerDBHelper = new BeerDataBaseHelper(getContext());
@@ -66,11 +70,53 @@ public class ResellerMainPageFragment extends Fragment {
         mAddNewBeersButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //Create a dialog to let the seller choose how to add beers?
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                builder.setPositiveButton("Add beer manually", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getActivity().finish();
+                        Intent intent = new Intent(getActivity(), ResellerAddBeerActivity.class);
+                        Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getContext(),
+                                android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
+                        startActivity(intent, bundle);
+                    }
+                });
+                builder.setNegativeButton("Scan barcode", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getActivity().finish();
+                        Intent intent = new Intent(getActivity(), ResellerScanBarcodeActivity.class);
+                        Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getContext(),
+                                android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
+                        startActivity(intent, bundle);
+                    }
+                });
+
+                // Create the AlertDialog
+                AlertDialog dialog = builder.create();
+
+
+                dialog.show();
+                /*
+                AnimationHelper.bounce(mAddNewBeersButton);
                 getActivity().finish();
                 Intent intent = new Intent(getActivity(), ResellerAddBeerActivity.class);
                 Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getContext(),
                         android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
                 startActivity(intent, bundle);
+
+                 */
+            }
+        });
+
+        mCheckSalesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AnimationHelper.bounce(mCheckSalesButton);
+
             }
         });
 

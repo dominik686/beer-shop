@@ -13,6 +13,8 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 
+import com.example.beershop.utils.AnimationHelper;
+
 import java.util.Objects;
 
 public class CustomerShopPageFragment extends Fragment {
@@ -40,6 +42,7 @@ public class CustomerShopPageFragment extends Fragment {
         mSignOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AnimationHelper.rubberBand(v);
                 Intent intent = new Intent(getContext(), LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getContext(),
@@ -52,6 +55,7 @@ public class CustomerShopPageFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
+                AnimationHelper.rubberBand(v);
                 Intent intent = new Intent(getContext(), CustomerBasketActivity.class);
                 Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getContext(),
                         android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
@@ -63,18 +67,30 @@ public class CustomerShopPageFragment extends Fragment {
         mBrowseAllButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AnimationHelper.bounce(mBrowseAllButton);
+
                 Intent intent = new Intent(getContext(), CustomerBrowseAllActivity.class);
                 Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getContext(),
                         android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
                 startActivity(intent, bundle);
             }
         });
+
         mScanBarcodeButton = v.findViewById(R.id.scanBarcodeButton);
+        mScanBarcodeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), CustomerScanBarcodeActivity.class);
+                startActivity(intent);
+            }
+        });
 
         mGoBackButton = v.findViewById(R.id.goBackButton);
         mGoBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AnimationHelper.bounce(mGoBackButton);
+
                 Objects.requireNonNull(getActivity()).finish();
             }
         });

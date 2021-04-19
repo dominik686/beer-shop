@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import com.example.beershop.database.UserDataBaseHelper;
 import com.example.beershop.models.CustomerModel;
 import com.example.beershop.models.ResellerModel;
+import com.example.beershop.utils.AnimationHelper;
 
 public class CreateAccountFragment extends Fragment {
     ImageView mImage;
@@ -54,10 +55,15 @@ public class CreateAccountFragment extends Fragment {
 
                 if (TextUtils.isEmpty(username)) {
                     mUsername.setError("Please put in your username.");
+                    AnimationHelper.shake(mUsername);
+
                 }
                 if (TextUtils.isEmpty(password)) {
                     mPassword.setError("Please put in your password.");
+                    AnimationHelper.shake(mPassword);
+
                 } else {
+                    AnimationHelper.bounce(mCreateAccountButton);
 
                     if (mCustomerSwitch.isChecked()) {
 

@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.beershop.database.UserDataBaseHelper;
 import com.example.beershop.models.ResellerModel;
 import com.example.beershop.singletons.CurrentSeller;
+import com.example.beershop.utils.AnimationHelper;
 
 import java.util.List;
 
@@ -46,6 +47,7 @@ public class CustomerSellerListFragment extends Fragment {
         mSignoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AnimationHelper.rubberBand(v);
                 Intent intent = new Intent(getContext(), LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getContext(),
@@ -115,6 +117,8 @@ public class CustomerSellerListFragment extends Fragment {
                 mVisitButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        AnimationHelper.bounce(mVisitButton);
+
                         CurrentSeller.getInstance(getContext(), mReseller);
                         Intent intent = new Intent(getContext(), CustomerShopPageActivity.class);
                         Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getContext(),

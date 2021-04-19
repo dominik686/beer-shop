@@ -25,6 +25,7 @@ import com.example.beershop.models.BeerCategoryModel;
 import com.example.beershop.models.BeerModel;
 import com.example.beershop.models.ResellerModel;
 import com.example.beershop.singletons.CurrentUser;
+import com.example.beershop.utils.AnimationHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,7 @@ public class ResellerAddBeerFragment extends Fragment {
 
     BeerDataBaseHelper mBeerDBHelper;
     UserDataBaseHelper mUserDBHelper;
+    CurrentUser mCurrentUser;
     EditText mBeerBarcode;
     EditText mBeerName;
     EditText mBeerImage;
@@ -65,7 +67,7 @@ public class ResellerAddBeerFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_add_beer, container, false);
+        View v = inflater.inflate(R.layout.fragment_reseller_add_beer, container, false);
 
         mBeerNameLabel = v.findViewById(R.id.name_label);
         mBeerCategoryLabel = v.findViewById(R.id.category_label);
@@ -83,6 +85,7 @@ public class ResellerAddBeerFragment extends Fragment {
 
         mBeerDBHelper = new BeerDataBaseHelper(getContext());
         mUserDBHelper = new UserDataBaseHelper(getContext());
+        mCurrentUser = CurrentUser.getInstance(getContext());
 
         mAddBeer = v.findViewById(R.id.add_beer_button);
 
@@ -120,12 +123,15 @@ public class ResellerAddBeerFragment extends Fragment {
 
                 //Are all of the boxes filled?
                 if (TextUtils.isEmpty(beerImageString)) {
+                    AnimationHelper.shake(mBeerImage);
                     mBeerImage.setError("Please put in the name of the image.");
                 }
                 if (TextUtils.isEmpty(beerNameString)) {
+                    AnimationHelper.shake(mBeerName);
                     mBeerName.setError("Please put in the name of the beer.");
                 }
                 if (TextUtils.isEmpty(beerBarcodeString)) {
+                    AnimationHelper.shake(mBeerBarcode);
                     mBeerBarcode.setError("Please put in the barcode.");
                 }
                 if (!TextUtils.isEmpty(beerBarcodeString) && !TextUtils.isEmpty(beerNameString)
@@ -134,18 +140,32 @@ public class ResellerAddBeerFragment extends Fragment {
                     //If the beer doesnt already exist, add it to the DB
                     if (!mBeerDBHelper.checkIfBeerExists(bm)) {
                         mBeerDBHelper.addBeer(bm);
-                        CurrentUser currentUser = CurrentUser.getInstance(getContext());
-                        ResellerModel rm = currentUser.getResellerModel();
+
+                        ResellerModel rm = mCurrentUser.getResellerModel();
                         //Delete the activity and make a toast to notife the user
                         mUserDBHelper.addBeerToInventory(rm, mBeerDBHelper.getBeerId(bm), beerQuantity);
-                        Toast.makeText(getContext(), "Your beer has been added!", Toast.LENGTH_SHORT).show();
-                        getActivity().finish();
-                        Intent intent = new Intent(getActivity(), ResellerMainPageActivity.class);
 
-                        Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getContext(),
-                                android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
-                        startActivity(intent, bundle);
                     }
+                    //If the beer already exists in the DB and not the inventory, add it to the inventory
+                    else if (mUserDBHelper.getBeer(bm, mCurrentUser.getResellerModel()) == null) {
+                        mUserDBHelper.addBeerToInventory(mCurrentUser.getResellerModel(),
+                                bm.getBeerID(), bm.getQuantity());
+
+                    }
+                    //If the beer already exists in the DB and inventory, add the quantity
+                    else if (mUserDBHelper.getBeer(bm, mCurrentUser.getResellerModel()) != null) {
+                        mUserDBHelper.updateQuantity(bm, mCurrentUser.getResellerModel());
+                    }
+
+                    Toast.makeText(getContext(), "Your beer has been added!", Toast.LENGTH_SHORT).show();
+                    getActivity().finish();
+                    Intent intent = new Intent(getActivity(), ResellerMainPageActivity.class);
+
+                    Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getContext(),
+                            android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
+                    startActivity(intent, bundle);
+
+                    //If the beer already exists in the inventory, add the quantity
                 }
             }
         });

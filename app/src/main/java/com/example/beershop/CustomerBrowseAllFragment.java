@@ -73,7 +73,11 @@ public class CustomerBrowseAllFragment extends Fragment {
         mCurrentSeller = CurrentSeller.getInstance(getContext());
         mCurrentUser = CurrentUser.getInstance(getContext());
 
-        mBeers = mBeerDBHelper.getBeerListFromInventory(mCurrentSeller.getResellerModel().getInventory());
+        // Get the inventory from the DB and turn it into a list of Beer models for the adapter
+        String inventory = mUserDBHelper.getInventory(mCurrentSeller.getResellerModel());
+
+
+        mBeers = mBeerDBHelper.getBeerListFromInventory(inventory);
         mBeerListRecyclerview.setAdapter(new BeerListAdapter(mBeers));
         mBeerListRecyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -139,6 +143,8 @@ public class CustomerBrowseAllFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
 
+                        AnimationHelper.bounce(mAddButton);
+
                         if (mBeer.getQuantity() == 0) {
                             Animation anim = AnimationUtils.loadAnimation(getContext(), R.anim.shrink_fade);
                             anim.setDuration(500);
@@ -161,7 +167,7 @@ public class CustomerBrowseAllFragment extends Fragment {
                             });
                         } else {
                             mOKAnimation.playAnimation();
-                            AnimationHelper.shake(itemView);
+                            AnimationHelper.bounce(itemView);
 
 
                             BeerModel tempBeer = mBeer.copy();

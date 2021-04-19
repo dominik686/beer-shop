@@ -38,6 +38,14 @@ public class CurrentSeller {
         return mResellerModel;
     }
 
+    public void clearBasket() {
+        mBasketModel.clear();
+    }
+
+    public void updateInventory(String inventory) {
+        mResellerModel.setInventory(inventory);
+    }
+
     public void addToBasket(BeerModel model) {
         mBasketModel.addBeer(model);
     }

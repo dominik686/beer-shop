@@ -29,6 +29,7 @@ import com.example.beershop.models.BeerCategoryModel;
 import com.example.beershop.models.BeerModel;
 import com.example.beershop.singletons.CurrentSeller;
 import com.example.beershop.singletons.CurrentUser;
+import com.example.beershop.utils.AnimationHelper;
 
 public class CustomerBasketFragment extends Fragment {
     RecyclerView mBasketList;
@@ -54,6 +55,8 @@ public class CustomerBasketFragment extends Fragment {
         mSignOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AnimationHelper.rubberBand(mSignOutButton);
+
                 Intent intent = new Intent(getContext(), LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getContext(),
@@ -82,11 +85,19 @@ public class CustomerBasketFragment extends Fragment {
         mBuyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Remove items from the basket from the resellers inventory
+                AnimationHelper.bounce(mBuyButton);
+
                 BasketListAdapter adapter = (BasketListAdapter) mBasketList.getAdapter();
                 BasketModel basketCopy = adapter.mBasketModel;
+                //Update the database
                 mUserDBHelper.removeFromInventory(basketCopy.getBeers(), mCurrentSeller.getResellerModel());
 
+                // Update the current user singleton with the new inventory and clear the basket
+
+                mCurrentSeller.clearBasket();
+                mCurrentSeller.updateInventory(mUserDBHelper.getInventory(mCurrentSeller.getResellerModel()));
+
+                // Play animations
                 Animation anim = AnimationUtils.loadAnimation(getContext(), R.anim.shrink_fade);
                 mBasketList.startAnimation(anim);
                 anim.setAnimationListener(new Animation.AnimationListener() {
@@ -177,7 +188,7 @@ public class CustomerBasketFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         updateQuantity(-1);
-
+                        AnimationHelper.bounce(itemView);
 
                         if (mBeer.getQuantity() == 0) {
                             Animation anim = AnimationUtils.loadAnimation(getContext(), R.anim.shrink_fade);

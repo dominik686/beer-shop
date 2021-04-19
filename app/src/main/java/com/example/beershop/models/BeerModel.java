@@ -90,4 +90,8 @@ public class BeerModel {
     public BeerModel copy() {
         return new BeerModel(mBeerID, mBeerName, mBeerThumbnailName, mBeerCategoryID, getBeerBreweryID(), mBarcode);
     }
+
+    public String toItemString() {
+        return getBeerID() + ":" + getQuantity() + ",";
+    }
 }

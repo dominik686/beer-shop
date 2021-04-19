@@ -65,6 +65,7 @@ public class BeerDataBaseHelper extends SQLiteOpenHelper {
                 "  " + COLUMN_BEER_BREWERY_DESCRIPTION + " TEXT NOT NULL)";
         db.execSQL(createBeerBrewery);
 
+        db.close();
 
     }
 
@@ -114,6 +115,7 @@ public class BeerDataBaseHelper extends SQLiteOpenHelper {
         addBeerCategory(pils);
         addBeerCategory(wheatbeer);
         addBeerCategory(unknown);
+
         return true;
     }
     /* Methods for the categories table */
@@ -137,6 +139,7 @@ public class BeerDataBaseHelper extends SQLiteOpenHelper {
 
             while (cursor.moveToNext());
         }
+        db.close();
 
         return returnList;
 
@@ -155,6 +158,7 @@ public class BeerDataBaseHelper extends SQLiteOpenHelper {
             String desc = cursor.getString(2);
             return new BeerCategoryModel(id, name, desc);
         }
+        db.close();
 
         return null;
     }
@@ -180,19 +184,18 @@ public class BeerDataBaseHelper extends SQLiteOpenHelper {
         if (checkIfCategoryExists(model)) {
             return false;
         }
-        //Return true if the customer has been added sucessfully
+
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
         cv.put(COLUMN_BEER_CATEGORY_NAME, model.getBeerCategoryName());
         cv.put(COLUMN_BEER_CATEGORY_DESCRIPTION, model.getBeerCategoryDescription());
-        //If the username alraedy exists in the db
-        //dont add and return false
         long insert = db.insert(BEER_CATEGORIES_TABLE, null, cv);
+
+        db.close();
 
         return insert != -1;
     }
-    //If it doesnt, proceed with adding the category
 
 
     //Check if a cetegory doesnt already exist
@@ -202,6 +205,7 @@ public class BeerDataBaseHelper extends SQLiteOpenHelper {
                 + "\"" + model.getBeerCategoryName() + "\"";
 
         Cursor cursor = db.rawQuery(queryString, null);
+        db.close();
 
         return cursor.moveToFirst();
     }
@@ -228,6 +232,7 @@ public class BeerDataBaseHelper extends SQLiteOpenHelper {
 
             while (cursor.moveToNext());
         }
+        db.close();
 
         return returnList;
 
@@ -248,6 +253,7 @@ public class BeerDataBaseHelper extends SQLiteOpenHelper {
             BeerBreweryModel model = new BeerBreweryModel(id, breweryName, breweryDescription);
             return model;
         }
+        db.close();
 
         return null;
     }
@@ -268,6 +274,7 @@ public class BeerDataBaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_BEER_BREWERY_NAME, model.getBeerBreweryName());
         cv.put(COLUMN_BEER_BREWERY_DESCRIPTION, model.getBeerBreweryDescription());
         long insert = db.insert(BEER_BREWERY_TABLE, null, cv);
+        db.close();
 
         return insert != -1;
     }
@@ -279,8 +286,10 @@ public class BeerDataBaseHelper extends SQLiteOpenHelper {
                 + "\"" + bm.getBeerBreweryName() + "\"";
 
         Cursor cursor = db.rawQuery(queryString, null);
+        boolean res = cursor.moveToFirst();
+        db.close();
 
-        return cursor.moveToFirst();
+        return res;
     }
 
 
@@ -304,6 +313,7 @@ public class BeerDataBaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_BEER_CATEGORY_ID, model.getBeerCategoryID());
 
         long insert = db.insert(BEERS_TABLE, null, cv);
+        db.close();
 
         return insert != -1;
     }
@@ -318,6 +328,9 @@ public class BeerDataBaseHelper extends SQLiteOpenHelper {
                 + model.getBeerCategoryID() + " AND " + COLUMN_BEER_BREWERY_ID + " = "
                 + model.getBeerBreweryID();
         Cursor cursor = db.rawQuery(queryString, null);
+
+        db.close();
+
         return cursor.moveToFirst();
     }
 
@@ -332,6 +345,27 @@ public class BeerDataBaseHelper extends SQLiteOpenHelper {
         BeerModel bm = new BeerModel(cursor.getInt(0), cursor.getString(1),
                 cursor.getString(2), cursor.getInt(3), cursor.getInt(4),
                 cursor.getString(5));
+
+        db.close();
+
+        return bm;
+    }
+
+    public BeerModel getBeer(String barcode) {
+        String queryStirng = "SELECT * FROM " + BEERS_TABLE + " WHERE " + COLUMN_BEER_BARCODE + " = " + "'" +
+                barcode + "'";
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery(queryStirng, null);
+
+        BeerModel bm = null;
+        if (cursor.moveToFirst()) {
+
+            bm = new BeerModel(cursor.getInt(0), cursor.getString(1),
+                    cursor.getString(2), cursor.getInt(3), cursor.getInt(4),
+                    cursor.getString(5));
+        }
+
+        db.close();
 
         return bm;
     }
@@ -349,6 +383,8 @@ public class BeerDataBaseHelper extends SQLiteOpenHelper {
             int result = cursor.getInt(0);
             return result;
         }
+
+        db.close();
 
         return -1;
     }
@@ -370,6 +406,8 @@ public class BeerDataBaseHelper extends SQLiteOpenHelper {
             returnList.add(bm);
 
         }
+
+
         return returnList;
     }
 

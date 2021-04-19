@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
 
@@ -51,6 +52,7 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
                 "  " + COLUMN_RESELLER_PASSWORD + " TEXT NOT NULL," +
                 "  " + COLUMN_RESELLER_INVENTORY + " TEXT)";
         db.execSQL(createResellersTableStatement);
+        db.close();
 
     }
 
@@ -70,7 +72,11 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
                 + cm.getCustomerID();
 
         Cursor cursor = db.rawQuery(queryString, null);
-        return cursor.moveToFirst();
+
+        boolean res = cursor.moveToFirst();
+        db.close();
+
+        return res;
 
     }
 
@@ -83,8 +89,9 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
                 + "\"" + cm.getCustomerUsername() + "\"" + " AND " + COLUMN_CUSTOMER_PASSWORD + " = " + "\"" + cm.getCustomerPassword() + "\"";
 
         Cursor cursor = db.rawQuery(queryString, null);
-
-        return cursor.moveToFirst();
+        boolean res = cursor.moveToFirst();
+        db.close();
+        return res;
     }
 
     //Return true if the customerModel username matches any username in the DB
@@ -97,7 +104,10 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
 
         Cursor cursor = db.rawQuery(queryString, null);
 
-        return cursor.moveToFirst();
+        boolean res = cursor.moveToFirst();
+
+        db.close();
+        return res;
     }
 
     //Try to add the customer to the DB, return true if successful
@@ -115,7 +125,7 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
         //If the username alraedy exists in the db
         //dont add and return false
         long insert = db.insert(CUSTOMERS_TABLE, null, cv);
-
+        db.close();
         return insert != -1;
 
     }
@@ -133,13 +143,15 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_RESELLER_PASSWORD, rm.getPassword());
         cv.put(COLUMN_RESELLER_INVENTORY, "");
         long insert = db.insert(RESELLERS_TABLE, null, cv);
+        db.close();
 
         return insert != -1;
 
     }
 
     //Add the beer to the resellers inventory
-    public long addBeerToInventory(ResellerModel rm, int beerID, int quantity) {
+    public boolean addBeerToInventory(ResellerModel rm, int beerID, int quantity) {
+        //If the beer already exists, just update the quantity?
         String newBeer = beerID + ":" + quantity + ",";
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -154,7 +166,8 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
 
 
         long res = db.update(RESELLERS_TABLE, cv, COLUMN_RESELLER_USERNAME + "=?", new String[]{rm.getUsername()});
-        return res;
+        db.close();
+        return res == -1;
 
         //Check if the beer doesnt already exist
         //get the current column, and then concanete the newBeer to it, and then replace the column?
@@ -167,8 +180,36 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
         long res = db.update(RESELLERS_TABLE, cv, COLUMN_RESELLER_USERNAME + "=?",
                 new String[]{rm.getUsername()});
 
+        db.close();
         return res != -1;
     }
+
+    // Update the quantity of the beer in the inventory
+    public boolean updateQuantity(BeerModel bm, ResellerModel rm) {
+        //
+        String oldInventory = getInventory(rm);
+        String newInventory = "";
+        String[] beersString = oldInventory.split(",");
+
+        //Go through all the items in the inventory
+        for (String beer : beersString) {
+            String id = beer.substring(0, beer.indexOf(':'));
+            String quantity = beer.substring(beer.indexOf(':') + 1);
+
+            // Modify the string with the new quantity
+            if (Integer.parseInt(id) == bm.getBeerID()) {
+                newInventory += bm.toItemString();
+
+            } else {
+                BeerModel beerModel = new BeerModel(Integer.parseInt(id), Integer.parseInt(quantity));
+                newInventory += beerModel.toItemString();
+            }
+        }
+
+
+        return updateInventory(newInventory, rm);
+    }
+
 
     public boolean removeFromInventory(List<BeerModel> beers, ResellerModel rm) {
         // Get current inventory string
@@ -212,12 +253,40 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
 
         // update resellers inventory
         boolean res = updateInventory(newInventory, rm);
-        return true;
+        return res;
 
         // for each item in oldInventory
         //    check if any of the beers are the item
         //       If they are, remove the quantity from beers
     }
+
+    // Check if the beer exists in the inventory, and if it does return it with added quantity of item
+    public BeerModel getBeer(BeerModel bm, ResellerModel rm) {
+        //check if the beer exists in the resellers inventory, and if it doesnt set the quantity to 0 ( or maybe -1?) and return the beer
+        BeerModel returnModel = null;
+
+        // If there is no inventory return null
+        String inventory = getInventory(rm);
+
+        if (TextUtils.isEmpty(inventory)) {
+            return null;
+        }
+        String[] inventoryList = inventory.split(",");
+
+        // Look for the item with the same ID ast
+        for (String item : inventoryList) {
+            if (Integer.parseInt(item.substring(0, item.indexOf(":"))) == bm.getBeerID()) {
+                returnModel = bm.copy();
+                // int d =Integer.parseInt( item.substring( item.indexOf(":" + 1)));
+                returnModel.setQuantity(Integer.parseInt(item.substring(item.indexOf(":") + 1)));
+                break;
+            }
+        }
+
+
+        return returnModel;
+    }
+
 
     // Check if the username already exists
     public boolean resellerUsernameCheck(ResellerModel rm) {
@@ -225,8 +294,9 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
         String queryString = "SELECT * FROM " + RESELLERS_TABLE + " WHERE " + COLUMN_RESELLER_USERNAME + " = "
                 + "\"" + rm.getUsername() + "\"";
         Cursor cursor = db.rawQuery(queryString, null);
-
-        return cursor.moveToFirst();
+        boolean res = cursor.moveToFirst();
+        db.close();
+        return res;
     }
 
     //Get inventory
@@ -238,6 +308,7 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(queryString, null);
         cursor.moveToFirst();
 
+        db.close();
         return cursor.getString(0);
     }
 
@@ -262,7 +333,7 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
 
             while (cursor.moveToNext());
         }
-
+        db.close();
         return returnList;
     }
 
@@ -272,6 +343,8 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
                 + "\"" + rm.getUsername() + "\"" + " AND " + COLUMN_RESELLER_PASSWORD + " = " + "\"" + rm.getPassword() + "\"";
         Cursor cursor = db.rawQuery(queryString, null);
 
-        return cursor.moveToFirst();
+        boolean res = cursor.moveToFirst();
+        db.close();
+        return res;
     }
 }
