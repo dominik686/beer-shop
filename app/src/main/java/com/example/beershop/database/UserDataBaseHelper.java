@@ -52,7 +52,6 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
                 "  " + COLUMN_RESELLER_PASSWORD + " TEXT NOT NULL," +
                 "  " + COLUMN_RESELLER_INVENTORY + " TEXT)";
         db.execSQL(createResellersTableStatement);
-        db.close();
 
     }
 
@@ -143,7 +142,7 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_RESELLER_PASSWORD, rm.getPassword());
         cv.put(COLUMN_RESELLER_INVENTORY, "");
         long insert = db.insert(RESELLERS_TABLE, null, cv);
-        db.close();
+
 
         return insert != -1;
 
@@ -290,17 +289,19 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
 
     // Check if the username already exists
     public boolean resellerUsernameCheck(ResellerModel rm) {
+
         SQLiteDatabase db = this.getReadableDatabase();
         String queryString = "SELECT * FROM " + RESELLERS_TABLE + " WHERE " + COLUMN_RESELLER_USERNAME + " = "
                 + "\"" + rm.getUsername() + "\"";
         Cursor cursor = db.rawQuery(queryString, null);
         boolean res = cursor.moveToFirst();
-        db.close();
+
         return res;
     }
 
     //Get inventory
     public String getInventory(ResellerModel rm) {
+        close();
         SQLiteDatabase db = this.getReadableDatabase();
         String queryString = "SELECT " + COLUMN_RESELLER_INVENTORY + " FROM " + RESELLERS_TABLE +
                 " WHERE " + COLUMN_RESELLER_USERNAME + " = "

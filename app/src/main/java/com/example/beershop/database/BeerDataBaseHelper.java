@@ -33,7 +33,6 @@ public class BeerDataBaseHelper extends SQLiteOpenHelper {
 
     public BeerDataBaseHelper(@Nullable Context context) {
         super(context, "beer.db", null, 1);
-        getReadableDatabase();
     }
 
     private static final String COLUMN_BEER_PICTURE = "BeerPicture";
@@ -64,9 +63,6 @@ public class BeerDataBaseHelper extends SQLiteOpenHelper {
                 "  " + COLUMN_BEER_BREWERY_NAME + " TEXT NOT NULL," +
                 "  " + COLUMN_BEER_BREWERY_DESCRIPTION + " TEXT NOT NULL)";
         db.execSQL(createBeerBrewery);
-
-        db.close();
-
     }
 
 
@@ -205,7 +201,6 @@ public class BeerDataBaseHelper extends SQLiteOpenHelper {
                 + "\"" + model.getBeerCategoryName() + "\"";
 
         Cursor cursor = db.rawQuery(queryString, null);
-        db.close();
 
         return cursor.moveToFirst();
     }
@@ -287,8 +282,6 @@ public class BeerDataBaseHelper extends SQLiteOpenHelper {
 
         Cursor cursor = db.rawQuery(queryString, null);
         boolean res = cursor.moveToFirst();
-        db.close();
-
         return res;
     }
 
@@ -328,9 +321,6 @@ public class BeerDataBaseHelper extends SQLiteOpenHelper {
                 + model.getBeerCategoryID() + " AND " + COLUMN_BEER_BREWERY_ID + " = "
                 + model.getBeerBreweryID();
         Cursor cursor = db.rawQuery(queryString, null);
-
-        db.close();
-
         return cursor.moveToFirst();
     }
 
