@@ -103,7 +103,7 @@ public class LoginFragment extends Fragment {
                         //Search the customer table and if the username matches, log in
                         CustomerModel cm = new CustomerModel(-1, username, password);
                         if (mUserDBHelper.customerCredentialsCheck(cm)) {
-                            CurrentUser.getInstance(getContext(), cm);
+                            CurrentUser.getInstance(cm);
 
                             Intent intent = new Intent(getActivity(), CustomerSellerListActivity.class);
                             Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getContext(),
@@ -114,7 +114,7 @@ public class LoginFragment extends Fragment {
                         //Search the reseller table, and if the username matches, log in
                         ResellerModel rm = new ResellerModel(-1, username, password);
                         if (mUserDBHelper.resellerCredentialsCheck(rm)) {
-                            CurrentUser.getInstance(getContext(), rm);
+                            CurrentUser.getInstance(rm);
 
                             Intent intent = new Intent(getActivity(), ResellerMainPageActivity.class);
                             Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getContext(),

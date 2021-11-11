@@ -10,16 +10,15 @@ public class CurrentSeller {
     private static CurrentSeller sCurrentSeller;
     private static ResellerModel mResellerModel;
     private static BasketModel mBasketModel;
-    private final Context mContext;
 
 
-    private CurrentSeller(Context pContext) {
-        mContext = pContext;
+    private CurrentSeller() {
+
     }
 
-    public static CurrentSeller getInstance(Context pContext, ResellerModel rm) {
+    public static CurrentSeller getInstance(ResellerModel rm) {
         if (sCurrentSeller == null) {
-            sCurrentSeller = new CurrentSeller(pContext);
+            sCurrentSeller = new CurrentSeller();
         }
         mResellerModel = rm;
         mBasketModel = new BasketModel();
@@ -27,9 +26,9 @@ public class CurrentSeller {
         return sCurrentSeller;
     }
 
-    public static CurrentSeller getInstance(Context pContext) {
+    public static CurrentSeller getInstance() {
         if (sCurrentSeller == null) {
-            sCurrentSeller = new CurrentSeller(pContext);
+            sCurrentSeller = new CurrentSeller();
         }
         return sCurrentSeller;
     }

@@ -80,7 +80,7 @@ public class ResellerScanBarcodeFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_reseller_scan_barcode, container, false);
         mScanAnimation = v.findViewById(R.id.lottie_scan_barcode1);
 
-        mCurrentUser = CurrentUser.getInstance(getContext());
+        mCurrentUser = CurrentUser.getInstance();
         mUserDBHelper = new UserDataBaseHelper(getContext());
         mBeerDBHelper = new BeerDataBaseHelper(getContext());
 

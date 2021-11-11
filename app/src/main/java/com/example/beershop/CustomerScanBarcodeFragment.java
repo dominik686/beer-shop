@@ -77,7 +77,7 @@ public class CustomerScanBarcodeFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_customer_scan_barcode, null);
         mScanAnimation = v.findViewById(R.id.lottie_scan_barcode);
 
-        mCurrentSeller = CurrentSeller.getInstance(getContext());
+        mCurrentSeller = CurrentSeller.getInstance();
         mUserDBHelper = new UserDataBaseHelper(getContext());
         mBeerDBHelper = new BeerDataBaseHelper(getContext());
 

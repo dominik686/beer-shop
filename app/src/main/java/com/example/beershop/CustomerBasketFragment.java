@@ -65,8 +65,8 @@ public class CustomerBasketFragment extends Fragment {
             }
         });
         mBuyButton = v.findViewById(R.id.buy_button);
-        mCurrentSeller = CurrentSeller.getInstance(getContext());
-        mCurrentUser = CurrentUser.getInstance(getContext());
+        mCurrentSeller = CurrentSeller.getInstance();
+        mCurrentUser = CurrentUser.getInstance();
 
         animationView = v.findViewById(R.id.confetti);
 

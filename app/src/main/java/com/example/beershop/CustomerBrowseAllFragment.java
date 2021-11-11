@@ -70,8 +70,8 @@ public class CustomerBrowseAllFragment extends Fragment {
         mBeerDBHelper = new BeerDataBaseHelper(getContext());
         mUserDBHelper = new UserDataBaseHelper(getContext());
 
-        mCurrentSeller = CurrentSeller.getInstance(getContext());
-        mCurrentUser = CurrentUser.getInstance(getContext());
+        mCurrentSeller = CurrentSeller.getInstance();
+        mCurrentUser = CurrentUser.getInstance();
 
         // Get the inventory from the DB and turn it into a list of Beer models for the adapter
         String inventory = mUserDBHelper.getInventory(mCurrentSeller.getResellerModel());

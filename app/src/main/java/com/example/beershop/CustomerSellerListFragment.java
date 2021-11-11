@@ -119,7 +119,7 @@ public class CustomerSellerListFragment extends Fragment {
                     public void onClick(View v) {
                         AnimationHelper.bounce(mVisitButton);
 
-                        CurrentSeller.getInstance(getContext(), mReseller);
+                        CurrentSeller.getInstance(mReseller);
                         Intent intent = new Intent(getContext(), CustomerShopPageActivity.class);
                         Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getContext(),
                                 android.R.anim.fade_in, android.R.anim.fade_out).toBundle();

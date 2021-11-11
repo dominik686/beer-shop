@@ -301,7 +301,7 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
 
     //Get inventory
     public String getInventory(ResellerModel rm) {
-        close();
+
         SQLiteDatabase db = this.getReadableDatabase();
         String queryString = "SELECT " + COLUMN_RESELLER_INVENTORY + " FROM " + RESELLERS_TABLE +
                 " WHERE " + COLUMN_RESELLER_USERNAME + " = "

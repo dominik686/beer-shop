@@ -85,7 +85,7 @@ public class ResellerAddBeerFragment extends Fragment {
 
         mBeerDBHelper = new BeerDataBaseHelper(getContext());
         mUserDBHelper = new UserDataBaseHelper(getContext());
-        mCurrentUser = CurrentUser.getInstance(getContext());
+        mCurrentUser = CurrentUser.getInstance();
 
         mAddBeer = v.findViewById(R.id.add_beer_button);
 

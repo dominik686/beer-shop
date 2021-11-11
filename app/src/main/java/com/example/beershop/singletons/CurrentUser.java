@@ -10,35 +10,34 @@ public class CurrentUser {
     private static CurrentUser sCurrentUser = null;
     private static ResellerModel mResellerUser = null;
     private static CustomerModel mCustomerUser = null;
-    private final Context mApplicationContext;
-    private String mUser;
 
-    private CurrentUser(Context pApplicationContext) {
-        mApplicationContext = pApplicationContext;
+
+    private CurrentUser() {
+
     }
 
     //If the resseller is the current user
-    public static CurrentUser getInstance(Context pContext, ResellerModel rm) {
+    public static CurrentUser getInstance(ResellerModel rm) {
         if (sCurrentUser == null) {
-            sCurrentUser = new CurrentUser(pContext);
+            sCurrentUser = new CurrentUser();
         }
 
         mResellerUser = rm;
         return sCurrentUser;
     }
 
-    public static CurrentUser getInstance(Context pContext, CustomerModel cm) {
+    public static CurrentUser getInstance(CustomerModel cm) {
         if (sCurrentUser == null) {
-            sCurrentUser = new CurrentUser(pContext);
+            sCurrentUser = new CurrentUser();
         }
 
         mCustomerUser = cm;
         return sCurrentUser;
     }
 
-    public static CurrentUser getInstance(Context pContext) {
+    public static CurrentUser getInstance() {
         if (sCurrentUser == null) {
-            sCurrentUser = new CurrentUser(pContext);
+            sCurrentUser = new CurrentUser();
         }
         return sCurrentUser;
     }

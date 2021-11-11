@@ -64,7 +64,7 @@ public class ResellerMainPageFragment extends Fragment {
 
 
         mUserDBHelper = new UserDataBaseHelper(getContext());
-        mCurrentUser = CurrentUser.getInstance(getContext());
+        mCurrentUser = CurrentUser.getInstance();
         mBeerDBHelper = new BeerDataBaseHelper(getContext());
 
         mAddNewBeersButton.setOnClickListener(new View.OnClickListener() {
