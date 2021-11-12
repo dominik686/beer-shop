@@ -335,6 +335,7 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
             while (cursor.moveToNext());
         }
         db.close();
+        cursor.close();
         return returnList;
     }
 
@@ -343,9 +344,44 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
         String queryString = "SELECT * FROM " + RESELLERS_TABLE + " WHERE " + COLUMN_RESELLER_USERNAME + " = "
                 + "\"" + rm.getUsername() + "\"" + " AND " + COLUMN_RESELLER_PASSWORD + " = " + "\"" + rm.getPassword() + "\"";
         Cursor cursor = db.rawQuery(queryString, null);
-
+        close();
         boolean res = cursor.moveToFirst();
-        db.close();
+        cursor.close();
         return res;
+    }
+
+
+    // Clear databases
+    public void clearDbAndRecreate()
+    {
+        //Remove tables
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("DROP TABLE "+CUSTOMERS_TABLE);
+        db.execSQL("DROP TABLE " + RESELLERS_TABLE);
+
+        //Recreate tables
+        //Create the customers table
+        String createCustomersTableStatement = "CREATE TABLE " + CUSTOMERS_TABLE + " (" +
+                "  " + COLUMN_CUSTOMER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+                "  " + COLUMN_CUSTOMER_USERNAME + " TEXT NOT NULL," +
+                "  " + COLUMN_CUSTOMER_PASSWORD + " TEXT NOT NULL)";
+        db.execSQL(createCustomersTableStatement);
+
+        //Create the resellers table
+        String createResellersTableStatement = "CREATE TABLE " + RESELLERS_TABLE + " (" +
+                "  " + COLUMN_RESELLER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+                "  " + COLUMN_RESELLER_USERNAME + " TEXT NOT NULL," +
+                "  " + COLUMN_RESELLER_PASSWORD + " TEXT NOT NULL," +
+                "  " + COLUMN_RESELLER_INVENTORY + " TEXT)";
+        db.execSQL(createResellersTableStatement);
+        close();
+
+    }
+    public void clearDb()
+    {
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("DROP TABLE "+CUSTOMERS_TABLE);
+        db.execSQL("DROP TABLE " + RESELLERS_TABLE);
+        close();
     }
 }

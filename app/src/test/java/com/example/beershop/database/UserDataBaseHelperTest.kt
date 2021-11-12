@@ -1,33 +1,48 @@
-package com.example.beershop.database;
+package com.example.beershop.database
 
-import com.example.beershop.BuildConfig;
+import org.robolectric.RobolectricTestRunner
+import com.example.beershop.database.UserDataBaseHelper
+import junit.framework.TestCase
+import org.junit.After
+import org.junit.Before
+import org.junit.jupiter.api.Test
+import org.junit.runner.RunWith
+import org.robolectric.RuntimeEnvironment
+import org.robolectric.annotation.Config
 
-import junit.framework.TestCase;
-
-import org.junit.Before;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
-import org.robolectric.annotation.Config;
-
-@RunWith(RobolectricTestRunner.class)
-@Config(sdk = 30)
-public class UserDataBaseHelperTest extends TestCase {
-   // https://medium.com/mobile-app-development-publication/android-sqlite-database-unit-testing-is-easy-a09994701162#.j2bceyqq6
-    private UserDataBaseHelper dbHelper;
-
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [30])
+class UserDataBaseHelperTest : TestCase() {
+    // https://medium.com/mobile-app-development-publication/android-sqlite-database-unit-testing-is-easy-a09994701162#.j2bceyqq6
+  //   https://medium.com/@boonkeat/android-unit-testing-with-junit5-d1b8f9c620b6
+    private var dbHelper: UserDataBaseHelper? = null
     @Before
-    public void setup()
-    {
-        dbHelper = new UserDataBaseHelper(RuntimeEnvironment.getApplication());
-        //Add a clear method here?
+    fun setup() {
+        dbHelper = UserDataBaseHelper(RuntimeEnvironment.getApplication())
+        dbHelper!!.clearDbAndRecreate()
     }
 
-    public void testAddCustomer()
-    {
+    @After
+    public override fun tearDown() {
+        dbHelper!!.clearDb()
     }
 
-    public void testAddReseller()
+    @Test
+    fun testAddCustomer() {
+        // Given
+
+
+        // When
+
+
+        // Then
+    }
+
+    fun testAddReseller() {}
+
+    @Test
+    fun `When Given `()
     {
+
     }
 }
