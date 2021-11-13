@@ -351,6 +351,10 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
     }
 
 
+   /*
+   Testing methods
+    */
+
     // Clear databases
     public void clearDbAndRecreate()
     {
@@ -383,5 +387,22 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE "+CUSTOMERS_TABLE);
         db.execSQL("DROP TABLE " + RESELLERS_TABLE);
         close();
+    }
+
+    public String customerToString()
+    {
+        SQLiteDatabase db = getReadableDatabase();
+        String query = "SELECT *" + "FROM " + CUSTOMERS_TABLE;
+
+        Cursor cursor = db.rawQuery(query, null);
+        if(cursor.moveToFirst())
+        {
+            int id = cursor.getInt(0);
+            String username = cursor.getString(1);
+            String password = cursor.getString(2);
+
+            return new CustomerModel(id, username, password).toString();
+        }
+        return "";
     }
 }

@@ -1,18 +1,21 @@
 package com.example.beershop.database
 
+import android.os.Build.VERSION_CODES.LOLLIPOP
+import com.example.beershop.BuildConfig
 import org.robolectric.RobolectricTestRunner
 import com.example.beershop.database.UserDataBaseHelper
+import com.example.beershop.models.CustomerModel
 import junit.framework.TestCase
 import org.junit.After
 import org.junit.Before
-import org.junit.jupiter.api.Test
+import org.junit.Test
+
 import org.junit.runner.RunWith
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [30])
-class UserDataBaseHelperTest : TestCase() {
+class UserDataBaseHelperTest : TestCase(){
     // https://medium.com/mobile-app-development-publication/android-sqlite-database-unit-testing-is-easy-a09994701162#.j2bceyqq6
   //   https://medium.com/@boonkeat/android-unit-testing-with-junit5-d1b8f9c620b6
     private var dbHelper: UserDataBaseHelper? = null
@@ -28,18 +31,28 @@ class UserDataBaseHelperTest : TestCase() {
     }
 
     @Test
-    fun testAddCustomer() {
+    fun testAddCustomer_validData() {
         // Given
+        var customerModel = CustomerModel(1, "customer", "password")
 
+        // When
+        dbHelper?.addCustomer(customerModel)
+
+        // Then
+        assertEquals(dbHelper?.customerToString(), customerModel.toString())
+    }
+
+
+    @Test
+    fun testAddReseller_validData()
+    {
+        // Given
 
         // When
 
-
         // Then
     }
-
-    fun testAddReseller() {}
-
+    //Add test cases for invalid customer models as well?
     @Test
     fun `When Given `()
     {
