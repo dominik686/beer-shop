@@ -5,6 +5,7 @@ import com.example.beershop.BuildConfig
 import org.robolectric.RobolectricTestRunner
 import com.example.beershop.database.UserDataBaseHelper
 import com.example.beershop.models.CustomerModel
+import com.example.beershop.models.ResellerModel
 import junit.framework.TestCase
 import org.junit.After
 import org.junit.Before
@@ -33,7 +34,7 @@ class UserDataBaseHelperTest : TestCase(){
     @Test
     fun testAddCustomer_validData() {
         // Given
-        var customerModel = CustomerModel(1, "customer", "password")
+        val customerModel = CustomerModel(1, "customer", "password")
 
         // When
         dbHelper?.addCustomer(customerModel)
@@ -47,10 +48,11 @@ class UserDataBaseHelperTest : TestCase(){
     fun testAddReseller_validData()
     {
         // Given
-
+        val resellerModel = ResellerModel(1, "reseller" ,"password")
         // When
-
+        dbHelper!!.addReseller(resellerModel)
         // Then
+        assertEquals(dbHelper!!.resellerToString(), resellerModel.toString())
     }
     //Add test cases for invalid customer models as well?
     @Test

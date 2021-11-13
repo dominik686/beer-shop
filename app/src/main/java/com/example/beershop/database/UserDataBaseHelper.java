@@ -405,4 +405,23 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
         }
         return "";
     }
+
+    public String resellerToString()
+    { SQLiteDatabase db = getReadableDatabase();
+        String query = "SELECT *" + "FROM " + RESELLERS_TABLE;
+
+        Cursor cursor = db.rawQuery(query, null);
+        if(cursor.moveToFirst())
+        {
+            int resellerID = cursor.getInt(0);
+            String resellerUsername = cursor.getString(1);
+            String resellerPassword = cursor.getString(2);
+            String resellerInventory = cursor.getString(3);
+
+            return new ResellerModel(resellerID, resellerUsername, resellerPassword, resellerInventory).toString();
+        }
+        cursor.close();
+        return "";
+
+    }
 }

@@ -54,4 +54,13 @@ public class ResellerModel {
     }
 
 
+    @Override
+    public String toString() {
+        return "ResellerModel{" +
+                "m_ID=" + m_ID +
+                ", m_Username='" + m_Username + '\'' +
+                ", m_Password='" + m_Password + '\'' +
+                ", m_Inventory='" + m_Inventory + '\'' +
+                '}';
+    }
 }
