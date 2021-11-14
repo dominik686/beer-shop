@@ -74,6 +74,7 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
 
         boolean res = cursor.moveToFirst();
         db.close();
+        cursor.close();
 
         return res;
 
@@ -89,7 +90,9 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
 
         Cursor cursor = db.rawQuery(queryString, null);
         boolean res = cursor.moveToFirst();
+
         db.close();
+        cursor.close();
         return res;
     }
 
@@ -106,6 +109,7 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
         boolean res = cursor.moveToFirst();
 
         db.close();
+        cursor.close();
         return res;
     }
 
@@ -166,6 +170,7 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
 
         long res = db.update(RESELLERS_TABLE, cv, COLUMN_RESELLER_USERNAME + "=?", new String[]{rm.getUsername()});
         db.close();
+        cursor.close();
         return res == -1;
 
         //Check if the beer doesnt already exist
@@ -295,7 +300,7 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
                 + "\"" + rm.getUsername() + "\"";
         Cursor cursor = db.rawQuery(queryString, null);
         boolean res = cursor.moveToFirst();
-
+        cursor.close();
         return res;
     }
 
@@ -308,7 +313,7 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
                 + "\"" + rm.getUsername() + "\"";
         Cursor cursor = db.rawQuery(queryString, null);
         cursor.moveToFirst();
-
+        cursor.close();
         db.close();
         return cursor.getString(0);
     }
@@ -403,6 +408,9 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
 
             return new CustomerModel(id, username, password).toString();
         }
+        close();
+        cursor.close();
+
         return "";
     }
 

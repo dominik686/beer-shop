@@ -4,6 +4,7 @@ import android.os.Build.VERSION_CODES.LOLLIPOP
 import com.example.beershop.BuildConfig
 import org.robolectric.RobolectricTestRunner
 import com.example.beershop.database.UserDataBaseHelper
+import com.example.beershop.models.BeerModel
 import com.example.beershop.models.CustomerModel
 import com.example.beershop.models.ResellerModel
 import junit.framework.TestCase
@@ -52,8 +53,8 @@ class UserDataBaseHelperTest : TestCase(){
 
         // When
         val result = dbHelper!!.customerCredentialsCheck(customerModel)
-        // Then
 
+        // Then
         assertEquals(true, result)
     }
     @Test
@@ -64,10 +65,36 @@ class UserDataBaseHelperTest : TestCase(){
 
         // When
         val result = dbHelper!!.customerCredentialsCheck(customerModel)
-        // Then
 
+        // Then
         assertEquals(false, result)
 
+    }
+
+    @Test
+    fun testCustomerUsernameCheck_validUsername_ReturnsTrue()
+    {
+        // Given
+        val customerModel = CustomerModel(1, "customer", "passowrd")
+        dbHelper!!.addCustomer(customerModel)
+
+        // When
+        val result = dbHelper!!.customerUsernameCheck(customerModel)
+
+        // Then
+        assertEquals(true, result)
+    }
+    @Test
+    fun testCustomerUsernameCheck_invalidUsername_ReturnsFalse()
+    {
+        // Given
+        val customerModel = CustomerModel(1, "customer", "passowrd")
+
+        // When
+        val result = dbHelper!!.customerUsernameCheck(customerModel)
+
+        // Then
+        assertEquals(false, result)
     }
 
 
@@ -82,10 +109,10 @@ class UserDataBaseHelperTest : TestCase(){
         assertEquals(resellerModel.toString(), dbHelper!!.resellerToString())
     }
     @Test
-    fun testResellersCredentialsCheck_validCredentials_ReturnsTrue()
+    fun testResellerCredentialsCheck_validCredentials_ReturnsTrue()
     {
         // Given
-        val resellerModel = ResellerModel(1, "Reseller", "Password", "Inventory")
+        val resellerModel = ResellerModel(1, "Reseller", "Password", "")
         dbHelper!!.addReseller(resellerModel)
 
         // When
@@ -95,10 +122,10 @@ class UserDataBaseHelperTest : TestCase(){
         assertEquals(true, result)
     }
     @Test
-    fun testResellersCredentialsCheck_invalidCredentials_ReturnsFalse()
+    fun testResellerCredentialsCheck_invalidCredentials_ReturnsFalse()
     {
         // Given
-        val resellerModel = ResellerModel(1, "Reseller", "Password", "Inventory")
+        val resellerModel = ResellerModel(1, "Reseller", "Password", "")
 
         // When
         val result = dbHelper!!.resellerCredentialsCheck(resellerModel)
@@ -107,6 +134,46 @@ class UserDataBaseHelperTest : TestCase(){
         assertEquals(false, result)
 
     }
+    @Test
+    fun testResellerUsernameCheck_validUsername_ReturnsTrue()
+    {
+        // Given
+        val resellerModel = ResellerModel(1, "Reseller", "Password", "")
+        dbHelper!!.addReseller(resellerModel)
+
+        // When
+        val result = dbHelper!!.resellerUsernameCheck(resellerModel)
+
+        // Then
+        assertEquals(true, result)
+    }
+
+    @Test
+    fun testResellerUsernameCheck_invalidUsername_ReturnsFalse()
+    {
+        // Given
+        val resellerModel = ResellerModel(1, "Reseller", "Password", "")
+
+        // When
+        val result = dbHelper!!.resellerUsernameCheck(resellerModel)
+
+        // Then
+        assertEquals(false, result)
+    }
+
+    @Test
+    fun testAddBeerToInventory_unknownReseller_ReturnsTrue()
+    {
+        // Given
+        val resellerModel = ResellerModel(1, "Reseller", "Password", "")
+        dbHelper!!.addReseller(resellerModel)
+
+        // When
+        val result = dbHelper!!.addBeerToInventory(resellerModel, 1, 50)
 
 
+
+        // Then
+        assertEquals(true, result )
+    }
 }
