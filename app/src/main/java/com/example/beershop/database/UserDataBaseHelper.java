@@ -344,9 +344,9 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
         String queryString = "SELECT * FROM " + RESELLERS_TABLE + " WHERE " + COLUMN_RESELLER_USERNAME + " = "
                 + "\"" + rm.getUsername() + "\"" + " AND " + COLUMN_RESELLER_PASSWORD + " = " + "\"" + rm.getPassword() + "\"";
         Cursor cursor = db.rawQuery(queryString, null);
-        close();
         boolean res = cursor.moveToFirst();
         cursor.close();
+        close();
         return res;
     }
 

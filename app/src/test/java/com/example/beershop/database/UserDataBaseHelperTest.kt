@@ -40,7 +40,34 @@ class UserDataBaseHelperTest : TestCase(){
         dbHelper?.addCustomer(customerModel)
 
         // Then
-        assertEquals(dbHelper?.customerToString(), customerModel.toString())
+        assertEquals(customerModel.toString(), dbHelper?.customerToString())
+    }
+
+    @Test
+    fun testCustomerCredentialsCheck_validCredentials_ReturnsTrue()
+    {
+        // Given
+        val customerModel = CustomerModel(1, "customer", "passowrd")
+        dbHelper!!.addCustomer(customerModel)
+
+        // When
+        val result = dbHelper!!.customerCredentialsCheck(customerModel)
+        // Then
+
+        assertEquals(true, result)
+    }
+    @Test
+    fun testCustomerCredentialsCheck_invalidCredentials_ReturnsFalse()
+    {
+        // Given
+        val customerModel = CustomerModel(1, "customer", "passowrd")
+
+        // When
+        val result = dbHelper!!.customerCredentialsCheck(customerModel)
+        // Then
+
+        assertEquals(false, result)
+
     }
 
 
@@ -52,12 +79,34 @@ class UserDataBaseHelperTest : TestCase(){
         // When
         dbHelper!!.addReseller(resellerModel)
         // Then
-        assertEquals(dbHelper!!.resellerToString(), resellerModel.toString())
+        assertEquals(resellerModel.toString(), dbHelper!!.resellerToString())
     }
-    //Add test cases for invalid customer models as well?
     @Test
-    fun `When Given `()
+    fun testResellersCredentialsCheck_validCredentials_ReturnsTrue()
     {
+        // Given
+        val resellerModel = ResellerModel(1, "Reseller", "Password", "Inventory")
+        dbHelper!!.addReseller(resellerModel)
+
+        // When
+        val result = dbHelper!!.resellerCredentialsCheck(resellerModel)
+
+        // Then
+        assertEquals(true, result)
+    }
+    @Test
+    fun testResellersCredentialsCheck_invalidCredentials_ReturnsFalse()
+    {
+        // Given
+        val resellerModel = ResellerModel(1, "Reseller", "Password", "Inventory")
+
+        // When
+        val result = dbHelper!!.resellerCredentialsCheck(resellerModel)
+
+        // Then
+        assertEquals(false, result)
 
     }
+
+
 }
