@@ -85,6 +85,9 @@ public class CreateAccountFragment extends Fragment {
 
     public void createNewCustomerAccount(String pUsername, String pPassword) {
         CustomerModel cm = new CustomerModel(-1, pUsername, pPassword);
+
+        // Try adding the customer to the database
+        // If the method fails it will return false
         if (mUserDBHelper.addCustomer(cm)) {
             Toast.makeText(getActivity(), "Account created!", Toast.LENGTH_LONG).show();
         } else {
@@ -96,6 +99,9 @@ public class CreateAccountFragment extends Fragment {
     //Try adding new account ot he database
     public void createNewResellerAccount(String pUsername, String pPassword) {
         ResellerModel rm = new ResellerModel(-1, pUsername, pPassword);
+
+        // Try adding the reseller to the database
+        // If the method fails it will return false
         if (mUserDBHelper.addReseller(rm)) {
             Toast.makeText(getActivity(), "Account created!", Toast.LENGTH_LONG).show();
         } else {

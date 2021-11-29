@@ -10,16 +10,8 @@ public class BasketModel {
         mBeers = new ArrayList<>();
     }
 
-    public BasketModel(List<BeerModel> mBeers) {
-        this.mBeers = mBeers;
-    }
-
     public List<BeerModel> getBeers() {
         return mBeers;
-    }
-
-    public void setBeers(List<BeerModel> mBeers) {
-        this.mBeers = mBeers;
     }
 
     //If a beer already exists in the list, instead of adding simply increase the quantity by 1
@@ -47,5 +39,5 @@ public class BasketModel {
     }
 
 
-    //If a beer already exists in mBeers, simply add 1 more to quantity?
+
 }

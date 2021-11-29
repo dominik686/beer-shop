@@ -313,9 +313,10 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
                 + "\"" + rm.getUsername() + "\"";
         Cursor cursor = db.rawQuery(queryString, null);
         cursor.moveToFirst();
+        String result = cursor.getString(0);
         cursor.close();
         db.close();
-        return cursor.getString(0);
+        return result;
     }
 
     public List<ResellerModel> getAllResellers() {

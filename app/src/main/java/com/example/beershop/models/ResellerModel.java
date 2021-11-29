@@ -1,5 +1,7 @@
 package com.example.beershop.models;
 
+import androidx.annotation.NonNull;
+
 //This is the data model class for Resellers
 public class ResellerModel {
     int m_ID; // Unique ID for the record
@@ -54,6 +56,7 @@ public class ResellerModel {
     }
 
 
+    @NonNull
     @Override
     public String toString() {
         return "ResellerModel{" +

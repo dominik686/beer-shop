@@ -97,10 +97,13 @@ public class LoginFragment extends Fragment {
                 } else {
 
 
-                    //If the customer switch is on search the customer table
-                    //If it isnt, searchn the reseller database
+                    /*
+                     If the customer switch is turned  on  search the customer table in the user database
+                      If it isn't, search the reseller table in the user database
+                     */
                     if (mCustomerSwitch.isChecked()) {
-                        //Search the customer table and if the username matches, log in
+
+                        //Search the customer table and if the username matches, proceed to the next page
                         CustomerModel cm = new CustomerModel(-1, username, password);
                         if (mUserDBHelper.customerCredentialsCheck(cm)) {
                             CurrentUser.getInstance(cm);
@@ -111,7 +114,7 @@ public class LoginFragment extends Fragment {
                             startActivity(intent, bundle);
                         }
                     } else {
-                        //Search the reseller table, and if the username matches, log in
+                        //Search the reseller table, and if the username matches, proceed to the next page
                         ResellerModel rm = new ResellerModel(-1, username, password);
                         if (mUserDBHelper.resellerCredentialsCheck(rm)) {
                             CurrentUser.getInstance(rm);
