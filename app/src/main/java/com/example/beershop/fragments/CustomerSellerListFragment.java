@@ -1,4 +1,4 @@
-package com.example.beershop;
+package com.example.beershop.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +18,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.beershop.R;
+import com.example.beershop.activities.CustomerShopPageActivity;
+import com.example.beershop.activities.LoginActivity;
 import com.example.beershop.database.UserDataBaseHelper;
 import com.example.beershop.models.ResellerModel;
 import com.example.beershop.singletons.CurrentSeller;

@@ -1,4 +1,6 @@
-package com.example.beershop;
+package com.example.beershop.fragments;
+
+import static android.app.Activity.RESULT_OK;
 
 import android.animation.Animator;
 import android.app.Dialog;
@@ -25,14 +27,17 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.example.beershop.R;
+import com.example.beershop.activities.ResellerMainPageActivity;
 import com.example.beershop.database.BeerDataBaseHelper;
 import com.example.beershop.database.UserDataBaseHelper;
 import com.example.beershop.models.BeerModel;
-import com.example.beershop.singletons.CurrentSeller;
+import com.example.beershop.singletons.CurrentUser;
 import com.example.beershop.utils.AnimationHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -50,34 +55,34 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import static android.app.Activity.RESULT_OK;
-
-public class CustomerScanBarcodeFragment extends Fragment {
+public class ResellerScanBarcodeFragment extends Fragment {
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
-    String mCurrentPhotoPath;
     LottieAnimationView mScanAnimation;
+    String mCurrentPhotoPath;
 
     BeerDataBaseHelper mBeerDBHelper;
     UserDataBaseHelper mUserDBHelper;
-    CurrentSeller mCurrentSeller;
+    CurrentUser mCurrentUser;
+    SuccessDialog mSuccessDialog;
 
-    public static CustomerScanBarcodeFragment newInstance() {
+    public static ResellerScanBarcodeFragment newInstance() {
 
         Bundle args = new Bundle();
 
-        CustomerScanBarcodeFragment fragment = new CustomerScanBarcodeFragment();
+        ResellerScanBarcodeFragment fragment = new ResellerScanBarcodeFragment();
         fragment.setArguments(args);
         return fragment;
+
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_customer_scan_barcode, null);
-        mScanAnimation = v.findViewById(R.id.lottie_scan_barcode);
+        View v = inflater.inflate(R.layout.fragment_reseller_scan_barcode, container, false);
+        mScanAnimation = v.findViewById(R.id.lottie_scan_barcode1);
 
-        mCurrentSeller = CurrentSeller.getInstance();
+        mCurrentUser = CurrentUser.getInstance();
         mUserDBHelper = new UserDataBaseHelper(getContext());
         mBeerDBHelper = new BeerDataBaseHelper(getContext());
 
@@ -104,12 +109,8 @@ public class CustomerScanBarcodeFragment extends Fragment {
 
             }
         });
-        // dispatchTakePictureIntent();
-
-        //mScanAnimation.cancelAnimation();
         return v;
     }
-
 
     // create a collision-resistant file name
     private File createImageFile() throws IOException {
@@ -182,19 +183,29 @@ public class CustomerScanBarcodeFragment extends Fragment {
                         BeerModel beerFromDB = mBeerDBHelper.getBeer(s);
 
                         // If bm == null then the beer doesnt exist in the DB
-                        if (mBeerDBHelper.getBeer(s) == null) {
+                        if (beerFromDB == null) {
                             // FailureDialog?
                             Toast.makeText(getContext(), "There was a mistake! try adding the beer manually", Toast.LENGTH_LONG).show();
+                        }
+                        // If the beer exists in the DB but not the inventory
+                        else if (mUserDBHelper.getBeer(beerFromDB, mCurrentUser.getResellerModel()) == null) {
+                            // Add the a single beer to the inventory - if there is need to add more,
+                            // try adding again
+                            mUserDBHelper.addBeerToInventory(mCurrentUser.getResellerModel(), beerFromDB.getBeerID(), 1);
+                            finishActivity();
                         } else {
-                            BeerModel beerFromInventory = mUserDBHelper.getBeer(beerFromDB, mCurrentSeller.getResellerModel());
+                            BeerModel beerFromInventory = mUserDBHelper.getBeer(beerFromDB, mCurrentUser.getResellerModel());
                             if (beerFromInventory.getQuantity() > 0) {
                                 runSuccessDialog(beerFromInventory);
+
                             }
+
                             // Play a success animation, and display a dialog confirming the beer and quantity?
                             // Look for beer model with the barcode
                         }
+
                     }
-                    getActivity().finish();
+
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -212,11 +223,19 @@ public class CustomerScanBarcodeFragment extends Fragment {
         }
     }
 
+    public void finishActivity() {
+        getActivity().finish();
+        Intent intent = new Intent(getContext(), ResellerMainPageActivity.class);
+        Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getContext(),
+                android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
+        startActivity(intent, bundle);
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void runSuccessDialog(BeerModel bm) {
-        SuccessDialog cdd = new SuccessDialog(bm);
-        cdd.create();
-        cdd.show();
+        mSuccessDialog = new SuccessDialog(bm);
+        mSuccessDialog.create();
+        mSuccessDialog.show();
     }
 
     public class SuccessDialog extends Dialog implements View.OnClickListener {
@@ -268,19 +287,27 @@ public class CustomerScanBarcodeFragment extends Fragment {
                     }
 
                     int inputQuantity = Integer.parseInt((mQuantity.getText().toString()));
-                    // If the inputQuantity is less than the max quantity, add the beer to the basket
-                    // and destroy the activity
-                    if ((mBeerModel.getQuantity() >= inputQuantity) && (mQuantity.getText().toString() != "")) {
-                        AnimationHelper.bounce(mAddButton);
-                        BeerModel newBeer = mBeerModel.copy();
-                        newBeer.setQuantity(Integer.parseInt((mQuantity.getText().toString())));
-                        mCurrentSeller.addToBasket(newBeer);
-                        Toast.makeText(getContext(), "Beer has been added!", Toast.LENGTH_SHORT).show();
-                        getActivity().finish();
-                        dismiss();
-                    } else {
-                        Toast.makeText(getContext(), "Quantity needs to be less or equal to: " + mBeerModel.getQuantity(), Toast.LENGTH_SHORT).show();
+                    // Add the beer to the inventory and
+                    AnimationHelper.bounce(mAddButton);
+                    BeerModel newBeer = mBeerModel.copy();
+                    newBeer.setQuantity(mBeerModel.getQuantity() + inputQuantity);
+                    //  newBeer.addQuantity(inputQuantity);
+
+                    // If the beer doesnt exist in the inventory
+                    if (mUserDBHelper.getBeer(newBeer, mCurrentUser.getResellerModel()) == null) {
+
+                        mUserDBHelper.addBeerToInventory(mCurrentUser.getResellerModel(), newBeer.getBeerID(), inputQuantity);
+                    } else// If it does exist, just add the quantity
+                    {
+                        mUserDBHelper.updateQuantity(newBeer, mCurrentUser.getResellerModel());
                     }
+
+                    dismiss();
+                    finishActivity();
+
+                    // If the beer already exists
+                    // Simply add quantity instead of adding a whole new beer
+
                 }
             });
 

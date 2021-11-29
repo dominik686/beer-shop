@@ -171,7 +171,7 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
         long res = db.update(RESELLERS_TABLE, cv, COLUMN_RESELLER_USERNAME + "=?", new String[]{rm.getUsername()});
         db.close();
         cursor.close();
-        return res == -1;
+        return res == 1;
 
         //Check if the beer doesnt already exist
         //get the current column, and then concanete the newBeer to it, and then replace the column?
@@ -313,9 +313,10 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
                 + "\"" + rm.getUsername() + "\"";
         Cursor cursor = db.rawQuery(queryString, null);
         cursor.moveToFirst();
+        String result = cursor.getString(0);
         cursor.close();
         db.close();
-        return cursor.getString(0);
+        return result;
     }
 
     public List<ResellerModel> getAllResellers() {

@@ -1,4 +1,6 @@
-package com.example.beershop;
+package com.example.beershop.activities;
+
+import com.example.beershop.fragments.ResellerMainPageFragment;
 
 public class ResellerMainPageActivity extends SingleFragmentActivity {
     @Override

@@ -32,22 +32,23 @@
         </provider>
 
 
-        <activity android:name=".CustomerShopPageActivity" />
-        <activity android:name=".CustomerSellerListActivity" />
-        <activity android:name=".CustomerScanBarcodeActivity" />
-        <activity android:name=".LoginActivity">
+        <activity android:name=".activities.CustomerShopPageActivity" android:exported="false"/>
+        <activity android:name=".activities.CustomerSellerListActivity" android:exported="false"/>
+        <activity android:name=".activities.CustomerScanBarcodeActivity" android:exported="false"/>
+        <activity android:name=".activities.LoginActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER" android:exported="false"/>
             </intent-filter>
         </activity>
-        <activity android:name=".CreateAccountActivity" />
-        <activity android:name=".CustomerBrowseAllActivity" />
-        <activity android:name=".CustomerBasketActivity" />
-        <activity android:name=".ResellerMainPageActivity" />
-        <activity android:name=".ResellerAddBeerActivity" />
-        <activity android:name=".ResellerScanBarcodeActivity" />
+        <activity android:name=".activities.CreateAccountActivity"     android:exported="false"
+            />
+        <activity android:name=".activities.CustomerBrowseAllActivity" android:exported="false"/>
+        <activity android:name=".activities.CustomerBasketActivity" android:exported="false"/>
+        <activity android:name=".activities.ResellerMainPageActivity" android:exported="false"/>
+        <activity android:name=".activities.ResellerAddBeerActivity" android:exported="false"/>
+        <activity android:name=".activities.ResellerScanBarcodeActivity" android:exported="false" />
     </application>
 
 </manifest>

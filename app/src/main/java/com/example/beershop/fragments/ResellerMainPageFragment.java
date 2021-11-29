@@ -1,4 +1,4 @@
-package com.example.beershop;
+package com.example.beershop.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -19,6 +19,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.beershop.R;
+import com.example.beershop.activities.ResellerAddBeerActivity;
+import com.example.beershop.activities.ResellerScanBarcodeActivity;
 import com.example.beershop.database.BeerDataBaseHelper;
 import com.example.beershop.database.UserDataBaseHelper;
 import com.example.beershop.models.BeerBreweryModel;

@@ -42,7 +42,9 @@ public class BeerDataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+
         //Create tables here
+
         //Beers database
         String createBeerTable = "CREATE TABLE " + BEERS_TABLE + " (" +
                 "  " + COLUMN_BEER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
@@ -97,7 +99,7 @@ public class BeerDataBaseHelper extends SQLiteOpenHelper {
                 "India pale ale (IPA) is a hoppy beer style within the broader category of pale ale.");
         BeerCategoryModel pils = new BeerCategoryModel(-1, "Pilsner (Pils)",
                 "Pilsner (also pilsener or simply pils) is a type of pale lager." +
-                        " It takes its name from the Bohemian city of Pilsen (Plzeň), " +
+                        " It takes its name from the Bohemian city of Pilsen (Plzen), " +
                         "where it was first produced in 1842 by Bavarian brewer Josef Groll.");
         BeerCategoryModel wheatbeer = new BeerCategoryModel(-1, "Weizen/Weissbier",
                 "Weizen/Weissbier is a top-fermented beer which is brewed with a " +

@@ -1,4 +1,4 @@
-package com.example.beershop;
+package com.example.beershop.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +17,10 @@ import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.example.beershop.R;
+import com.example.beershop.activities.CreateAccountActivity;
+import com.example.beershop.activities.CustomerSellerListActivity;
+import com.example.beershop.activities.ResellerMainPageActivity;
 import com.example.beershop.database.BeerDataBaseHelper;
 import com.example.beershop.database.UserDataBaseHelper;
 import com.example.beershop.models.CustomerModel;
@@ -49,8 +53,6 @@ public class LoginFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_login, container, false);
 
 
-        animationView = v.findViewById(R.id.animation_view);
-        animationView.playAnimation();
 
         mCustomerSwitch = v.findViewById(R.id.sw_customer);
         mImage = v.findViewById(R.id.logoImage);
@@ -97,10 +99,13 @@ public class LoginFragment extends Fragment {
                 } else {
 
 
-                    //If the customer switch is on search the customer table
-                    //If it isnt, searchn the reseller database
+                    /*
+                     If the customer switch is turned  on  search the customer table in the user database
+                      If it isn't, search the reseller table in the user database
+                     */
                     if (mCustomerSwitch.isChecked()) {
-                        //Search the customer table and if the username matches, log in
+
+                        //Search the customer table and if the username matches, proceed to the next page
                         CustomerModel cm = new CustomerModel(-1, username, password);
                         if (mUserDBHelper.customerCredentialsCheck(cm)) {
                             CurrentUser.getInstance(cm);
@@ -111,7 +116,7 @@ public class LoginFragment extends Fragment {
                             startActivity(intent, bundle);
                         }
                     } else {
-                        //Search the reseller table, and if the username matches, log in
+                        //Search the reseller table, and if the username matches, proceed to the next page
                         ResellerModel rm = new ResellerModel(-1, username, password);
                         if (mUserDBHelper.resellerCredentialsCheck(rm)) {
                             CurrentUser.getInstance(rm);
@@ -131,9 +136,3 @@ public class LoginFragment extends Fragment {
 
 }
 
-//TODO:
-/* -make it so that you can press login unless the two fields are filled
-   -make a minimum amount of characters for each field?
-   -Add a picture
-   -
-* */

@@ -11,8 +11,28 @@
         <entry key="..\:/AndroidStudioProjects/beer-shop/app/src/main/res/layout/fragment_customer_shop_page.xml" value="0.5" />
         <entry key="..\:/AndroidStudioProjects/beer-shop/app/src/main/res/layout/fragment_reseller_add_beer.xml" value="0.1503623188405797" />
         <entry key="..\:/AndroidStudioProjects/beer-shop/app/src/main/res/layout/fragment_reseller_main_page.xml" value="0.1503623188405797" />
+        <entry key="..\:/Users/Rutko/AndroidStudioProjects/beer-shop/app/src/main/res/layout/activity_fragment.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Rutko/AndroidStudioProjects/beer-shop/app/src/main/res/layout/basketrecyclerview_item.xml" value="0.20520833333333333" />
+        <entry key="..\:/Users/Rutko/AndroidStudioProjects/beer-shop/app/src/main/res/layout/button_basket.xml" value="0.1641337386018237" />
+        <entry key="..\:/Users/Rutko/AndroidStudioProjects/beer-shop/app/src/main/res/layout/button_browse_all.xml" value="0.12635869565217392" />
+        <entry key="..\:/Users/Rutko/AndroidStudioProjects/beer-shop/app/src/main/res/layout/button_createaccount.xml" value="0.1641337386018237" />
+        <entry key="..\:/Users/Rutko/AndroidStudioProjects/beer-shop/app/src/main/res/layout/button_sign_out.xml" value="0.1641337386018237" />
+        <entry key="..\:/Users/Rutko/AndroidStudioProjects/beer-shop/app/src/main/res/layout/credentials.xml" value="0.22509057971014493" />
+        <entry key="..\:/Users/Rutko/AndroidStudioProjects/beer-shop/app/src/main/res/layout/fragment_create_account.xml" value="0.1641337386018237" />
+        <entry key="..\:/Users/Rutko/AndroidStudioProjects/beer-shop/app/src/main/res/layout/fragment_customer_basket.xml" value="0.20520833333333333" />
+        <entry key="..\:/Users/Rutko/AndroidStudioProjects/beer-shop/app/src/main/res/layout/fragment_customer_browse_all.xml" value="0.20520833333333333" />
+        <entry key="..\:/Users/Rutko/AndroidStudioProjects/beer-shop/app/src/main/res/layout/fragment_customer_scan_barcode.xml" value="0.20520833333333333" />
+        <entry key="..\:/Users/Rutko/AndroidStudioProjects/beer-shop/app/src/main/res/layout/fragment_customer_seller_list.xml" value="0.1641337386018237" />
+        <entry key="..\:/Users/Rutko/AndroidStudioProjects/beer-shop/app/src/main/res/layout/fragment_customer_shop_page.xml" value="0.20520833333333333" />
+        <entry key="..\:/Users/Rutko/AndroidStudioProjects/beer-shop/app/src/main/res/layout/fragment_login.xml" value="0.1" />
+        <entry key="..\:/Users/Rutko/AndroidStudioProjects/beer-shop/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.3416666666666667" />
       </map>
     </option>
+  </component>
+  <component name="JavadocGenerationManager">
+    <option name="OUTPUT_DIRECTORY" value="$USER_HOME$/Desktop/beer shop uml" />
+    <option name="OTHER_OPTIONS" value="-sourcepath &quot;C:\Users\Rutko\AppData\Local\Android\Sdk\platforms\android-28\android.jar&quot;" />
+    <option name="OPTION_INCLUDE_LIBS" value="true" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
