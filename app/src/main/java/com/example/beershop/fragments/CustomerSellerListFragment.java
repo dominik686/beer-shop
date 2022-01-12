@@ -25,15 +25,15 @@ import com.example.beershop.database.UserDataBaseHelper;
 import com.example.beershop.models.ResellerModel;
 import com.example.beershop.singletons.CurrentSeller;
 import com.example.beershop.utils.AnimationHelper;
+import com.example.beershop.viewmodels.CustomerSellerListFragmentViewModel;
 
 import java.util.List;
 
 public class CustomerSellerListFragment extends Fragment {
     ImageButton mSignoutButton;
     RecyclerView mSellerListRecyclerView;
-    UserDataBaseHelper mDBHelper;
     List<ResellerModel> mResellers;
-
+    CustomerSellerListFragmentViewModel mViewModel;
     public static CustomerSellerListFragment newInstance() {
         CustomerSellerListFragment fragment = new CustomerSellerListFragment();
         return fragment;
@@ -43,9 +43,9 @@ public class CustomerSellerListFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_customer_seller_list, container, false);
-        mDBHelper = new UserDataBaseHelper(getContext());
+
         mSellerListRecyclerView = v.findViewById(R.id.seller_list_recyclerview);
-        mResellers = mDBHelper.getAllResellers();
+        mResellers = mViewModel.getAllResellers();
         mSignoutButton = v.findViewById(R.id.buttonSignout);
         mSignoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,8 +60,7 @@ public class CustomerSellerListFragment extends Fragment {
         });
         mSellerListRecyclerView.setAdapter(new SellerListAdapter(mResellers));
         mSellerListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mDBHelper = new UserDataBaseHelper(getContext());
-
+        mViewModel = new CustomerSellerListFragmentViewModel(getContext());
 
         return v;
     }
@@ -122,7 +121,7 @@ public class CustomerSellerListFragment extends Fragment {
                     public void onClick(View v) {
                         AnimationHelper.bounce(mVisitButton);
 
-                        CurrentSeller.getInstance(mReseller);
+                     mViewModel.updateSeller(mReseller);
                         Intent intent = new Intent(getContext(), CustomerShopPageActivity.class);
                         Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getContext(),
                                 android.R.anim.fade_in, android.R.anim.fade_out).toBundle();

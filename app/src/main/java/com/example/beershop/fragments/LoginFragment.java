@@ -27,6 +27,7 @@ import com.example.beershop.models.CustomerModel;
 import com.example.beershop.models.ResellerModel;
 import com.example.beershop.singletons.CurrentUser;
 import com.example.beershop.utils.AnimationHelper;
+import com.example.beershop.viewmodels.LoginFragmentViewModel;
 
 public class LoginFragment extends Fragment {
 
@@ -38,8 +39,7 @@ public class LoginFragment extends Fragment {
     private Button mCreateAccountButton;
     private Button mLoginButton;
     private Switch mCustomerSwitch;
-    private UserDataBaseHelper mUserDBHelper;
-    private BeerDataBaseHelper mBeerDBHelper;
+    private LoginFragmentViewModel mViewModel;
 
     public static LoginFragment newInstance() {
         LoginFragment fragment = new LoginFragment();
@@ -53,16 +53,13 @@ public class LoginFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_login, container, false);
 
 
-
         mCustomerSwitch = v.findViewById(R.id.sw_customer);
         mImage = v.findViewById(R.id.logoImage);
         mUsername = v.findViewById(R.id.username);
         mPassword = v.findViewById(R.id.password);
 
-
-        mUserDBHelper = new UserDataBaseHelper(getContext());
-        mBeerDBHelper = new BeerDataBaseHelper(getContext());
-        mBeerDBHelper.addDefaultValues();
+        mViewModel = new LoginFragmentViewModel(getContext());
+        mViewModel.addDefaultVales();
 
         mCreateAccountButton = v.findViewById(R.id.loginCreateAccountButton);
         mCreateAccountButton.setOnClickListener(new View.OnClickListener() {
@@ -106,20 +103,18 @@ public class LoginFragment extends Fragment {
                     if (mCustomerSwitch.isChecked()) {
 
                         //Search the customer table and if the username matches, proceed to the next page
-                        CustomerModel cm = new CustomerModel(-1, username, password);
-                        if (mUserDBHelper.customerCredentialsCheck(cm)) {
-                            CurrentUser.getInstance(cm);
-
+                        if (mViewModel.costumerCredentialsCheck(username, password)) {
+                            mViewModel.updateCurrentUser();
                             Intent intent = new Intent(getActivity(), CustomerSellerListActivity.class);
                             Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getContext(),
                                     android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
                             startActivity(intent, bundle);
                         }
                     } else {
+
                         //Search the reseller table, and if the username matches, proceed to the next page
-                        ResellerModel rm = new ResellerModel(-1, username, password);
-                        if (mUserDBHelper.resellerCredentialsCheck(rm)) {
-                            CurrentUser.getInstance(rm);
+                        if (mViewModel.resellerCredentialsCheck(username, password)) {
+                           mViewModel.updateCurrentUser();
 
                             Intent intent = new Intent(getActivity(), ResellerMainPageActivity.class);
                             Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getContext(),

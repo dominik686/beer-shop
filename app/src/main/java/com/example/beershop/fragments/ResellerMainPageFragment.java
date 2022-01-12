@@ -30,6 +30,7 @@ import com.example.beershop.models.BeerModel;
 import com.example.beershop.models.ResellerModel;
 import com.example.beershop.singletons.CurrentUser;
 import com.example.beershop.utils.AnimationHelper;
+import com.example.beershop.viewmodels.ResellerMainPageFragmentViewModel;
 
 import java.util.List;
 
@@ -39,10 +40,9 @@ public class ResellerMainPageFragment extends Fragment {
 
     RecyclerView mInventoryRecyclerview;
 
-    CurrentUser mCurrentUser;
-    BeerDataBaseHelper mBeerDBHelper;
-    UserDataBaseHelper mUserDBHelper;
 
+
+    ResellerMainPageFragmentViewModel mViewModel;
     public static ResellerMainPageFragment newInstance() {
 
         Bundle args = new Bundle();
@@ -65,11 +65,7 @@ public class ResellerMainPageFragment extends Fragment {
         mCheckSalesButton = v.findViewById(R.id.button_check_sales);
         mInventoryRecyclerview = v.findViewById(R.id.rv_inventory);
 
-
-        mUserDBHelper = new UserDataBaseHelper(getContext());
-        mCurrentUser = CurrentUser.getInstance();
-        mBeerDBHelper = new BeerDataBaseHelper(getContext());
-
+        mViewModel = new ResellerMainPageFragmentViewModel(getContext());
         mAddNewBeersButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,13 +119,12 @@ public class ResellerMainPageFragment extends Fragment {
             }
         });
 
-        ResellerModel rm = mCurrentUser.getResellerModel();
         //Only get the inventory if its not empty
-        String inventory = mUserDBHelper.getInventory(rm);
+        String inventory = mViewModel.getInventory();
         if (TextUtils.isEmpty(inventory)) {
 
         } else {
-            List<BeerModel> beerModelList = mBeerDBHelper.getBeerListFromInventory(inventory);
+            List<BeerModel> beerModelList =mViewModel.getListFromInventory(inventory);
             mInventoryRecyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
             mInventoryRecyclerview.setAdapter(new InventoryAdapter(beerModelList));
         }
@@ -202,8 +197,8 @@ public class ResellerMainPageFragment extends Fragment {
             public void bindBeer(BeerModel bm) {
                 mBeerModel = bm;
 
-                mBeerCategoryModel = mBeerDBHelper.getCategory(bm.getBeerCategoryID());
-                mBeerBreweryModel = mBeerDBHelper.getBrewery(bm.getBeerBreweryID());
+                mBeerCategoryModel = mViewModel.getCategory(bm.getBeerCategoryID());
+                mBeerBreweryModel = mViewModel.getBrewery(bm.getBeerBreweryID());
 
                 mBeerName.setText(bm.getBeerName());
                 mBeerCategory.setText(mBeerCategoryModel.getBeerCategoryName());

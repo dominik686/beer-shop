@@ -32,16 +32,17 @@ import com.example.beershop.models.BeerModel;
 import com.example.beershop.singletons.CurrentSeller;
 import com.example.beershop.singletons.CurrentUser;
 import com.example.beershop.utils.AnimationHelper;
+import com.example.beershop.viewmodels.CustomerBasketViewModel;
 
 public class CustomerBasketFragment extends Fragment {
     RecyclerView mBasketList;
     ImageButton mSignOutButton;
     Button mBuyButton;
-    CurrentSeller mCurrentSeller;
-    CurrentUser mCurrentUser;
+
     LottieAnimationView animationView;
-    BeerDataBaseHelper mBeerDBHelper;
-    UserDataBaseHelper mUserDBHelper;
+
+
+    CustomerBasketViewModel mViewModel = new CustomerBasketViewModel(getContext());
 
     public static CustomerBasketFragment newInstance() {
         CustomerBasketFragment fragment = new CustomerBasketFragment();
@@ -67,19 +68,16 @@ public class CustomerBasketFragment extends Fragment {
             }
         });
         mBuyButton = v.findViewById(R.id.buy_button);
-        mCurrentSeller = CurrentSeller.getInstance();
-        mCurrentUser = CurrentUser.getInstance();
+
 
         animationView = v.findViewById(R.id.confetti);
 
-        mBasketList.setAdapter(new BasketListAdapter(mCurrentSeller.getBasketModel()));
+        mBasketList.setAdapter(new BasketListAdapter(mViewModel.getBasket()));
         mBasketList.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        mBeerDBHelper = new BeerDataBaseHelper(getContext());
-        mUserDBHelper = new UserDataBaseHelper(getContext());
 
         //If the basket isnt empty
-        if (mCurrentSeller.getBasketModel().getBeers().isEmpty()) {
+        if (mViewModel.isBasketEmpty()) {
             return v;
         }
 
@@ -92,12 +90,11 @@ public class CustomerBasketFragment extends Fragment {
                 BasketListAdapter adapter = (BasketListAdapter) mBasketList.getAdapter();
                 BasketModel basketCopy = adapter.mBasketModel;
                 //Update the database
-                mUserDBHelper.removeFromInventory(basketCopy.getBeers(), mCurrentSeller.getResellerModel());
+                 mViewModel.removeFromInventory(basketCopy.getBeers());
 
                 // Update the current user singleton with the new inventory and clear the basket
-
-                mCurrentSeller.clearBasket();
-                mCurrentSeller.updateInventory(mUserDBHelper.getInventory(mCurrentSeller.getResellerModel()));
+                mViewModel.clearBasket();
+                mViewModel.updateInventory();
 
                 // Play animations
                 Animation anim = AnimationUtils.loadAnimation(getContext(), R.anim.shrink_fade);
@@ -222,8 +219,8 @@ public class CustomerBasketFragment extends Fragment {
             }
 
             public void updateViews(BeerModel beerModel) {
-                BeerCategoryModel category = mBeerDBHelper.getCategory(beerModel.getBeerCategoryID());
-                BeerBreweryModel brewery = mBeerDBHelper.getBrewery(beerModel.getBeerBreweryID());
+                BeerCategoryModel category = mViewModel.getCategory(beerModel);
+                BeerBreweryModel brewery = mViewModel.getBrewery(beerModel);
                 mBeerName.setText(beerModel.getBeerName());
                 mBeerCategory.setText(category.getBeerCategoryName());
                 mBeerBrewery.setText(brewery.getBeerBreweryName());

@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.beershop.R;
@@ -20,6 +21,7 @@ import com.example.beershop.database.UserDataBaseHelper;
 import com.example.beershop.models.CustomerModel;
 import com.example.beershop.models.ResellerModel;
 import com.example.beershop.utils.AnimationHelper;
+import com.example.beershop.viewmodels.CreateAccountFragmentViewModel;
 
 public class CreateAccountFragment extends Fragment {
     ImageView mImage;
@@ -28,7 +30,7 @@ public class CreateAccountFragment extends Fragment {
     EditText mPassword;
     Switch mCustomerSwitch;
     UserDataBaseHelper mUserDBHelper;
-
+    CreateAccountFragmentViewModel mViewModel;
     public static CreateAccountFragment newInstance() {
         CreateAccountFragment fragment = new CreateAccountFragment();
         return fragment;
@@ -44,7 +46,10 @@ public class CreateAccountFragment extends Fragment {
         mUsername = v.findViewById(R.id.username);
         mPassword = v.findViewById(R.id.password);
         mCustomerSwitch = v.findViewById(R.id.sw_customer);
-        mUserDBHelper = new UserDataBaseHelper(getContext());
+      //  mUserDBHelper = new UserDataBaseHelper(getContext());
+
+        mViewModel = new CreateAccountFragmentViewModel(getContext());
+
         mCreateAccountButton = v.findViewById(R.id.CreateAccountCreateAccountButton);
         mCreateAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,11 +90,12 @@ public class CreateAccountFragment extends Fragment {
     }
 
     public void createNewCustomerAccount(String pUsername, String pPassword) {
-        CustomerModel cm = new CustomerModel(-1, pUsername, pPassword);
+
 
         // Try adding the customer to the database
         // If the method fails it will return false
-        if (mUserDBHelper.addCustomer(cm)) {
+        if (mViewModel.createNewCustomerAccount( pUsername, pPassword))
+        {
             Toast.makeText(getActivity(), "Account created!", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(getActivity(), "Account creation failed! Try a different username.", Toast.LENGTH_LONG).show();
@@ -99,11 +105,10 @@ public class CreateAccountFragment extends Fragment {
 
     //Try adding new account ot he database
     public void createNewResellerAccount(String pUsername, String pPassword) {
-        ResellerModel rm = new ResellerModel(-1, pUsername, pPassword);
 
         // Try adding the reseller to the database
         // If the method fails it will return false
-        if (mUserDBHelper.addReseller(rm)) {
+        if (mViewModel.createNewResellerAccount( pUsername, pPassword)) {
             Toast.makeText(getActivity(), "Account created!", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(getActivity(), "Account creation failed! Try a different username.", Toast.LENGTH_LONG).show();

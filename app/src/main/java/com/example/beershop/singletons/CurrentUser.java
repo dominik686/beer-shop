@@ -17,30 +17,17 @@ public class CurrentUser {
     }
 
     //If the resseller is the current user
-    public static CurrentUser getInstance(ResellerModel rm) {
+    public static CurrentUser getInstance(ResellerModel rm, CustomerModel cm) {
         if (sCurrentUser == null) {
             sCurrentUser = new CurrentUser();
+            mResellerUser = rm;
+            mCustomerUser = cm;
+            return sCurrentUser;
         }
 
-        mResellerUser = rm;
         return sCurrentUser;
     }
 
-    public static CurrentUser getInstance(CustomerModel cm) {
-        if (sCurrentUser == null) {
-            sCurrentUser = new CurrentUser();
-        }
-
-        mCustomerUser = cm;
-        return sCurrentUser;
-    }
-
-    public static CurrentUser getInstance() {
-        if (sCurrentUser == null) {
-            sCurrentUser = new CurrentUser();
-        }
-        return sCurrentUser;
-    }
 
     public ResellerModel getResellerModel() {
         return mResellerUser;

@@ -30,21 +30,18 @@ import com.example.beershop.models.BeerModel;
 import com.example.beershop.singletons.CurrentSeller;
 import com.example.beershop.singletons.CurrentUser;
 import com.example.beershop.utils.AnimationHelper;
+import com.example.beershop.viewmodels.CustomerBrowseAllFragmentViewModel;
 
 import java.util.List;
 
 public class CustomerBrowseAllFragment extends Fragment {
-    RecyclerView mBeerListRecyclerview;
-    ImageButton mBasket;
-    ImageButton mSignOut;
+    private RecyclerView mBeerListRecyclerview;
+    private ImageButton mBasket;
+    private  ImageButton mSignOut;
 
-    BeerDataBaseHelper mBeerDBHelper;
-    UserDataBaseHelper mUserDBHelper;
 
-    CurrentUser mCurrentUser;
-    CurrentSeller mCurrentSeller;
-    List<BeerModel> mBeers;
-
+    private   List<BeerModel> mBeers;
+    private CustomerBrowseAllFragmentViewModel mViewModel;
     public static CustomerBrowseAllFragment newInstance() {
 
         CustomerBrowseAllFragment fragment = new CustomerBrowseAllFragment();
@@ -69,17 +66,14 @@ public class CustomerBrowseAllFragment extends Fragment {
                 startActivity(intent, bundle);
             }
         });
-        mBeerDBHelper = new BeerDataBaseHelper(getContext());
-        mUserDBHelper = new UserDataBaseHelper(getContext());
+        mViewModel = new CustomerBrowseAllFragmentViewModel(getContext());
 
-        mCurrentSeller = CurrentSeller.getInstance();
-        mCurrentUser = CurrentUser.getInstance();
 
         // Get the inventory from the DB and turn it into a list of Beer models for the adapter
-        String inventory = mUserDBHelper.getInventory(mCurrentSeller.getResellerModel());
+        String inventory = mViewModel.getCurrentSellerInventory();
 
 
-        mBeers = mBeerDBHelper.getBeerListFromInventory(inventory);
+        mBeers = mViewModel.getBeerListFromInventory(inventory);
         mBeerListRecyclerview.setAdapter(new BeerListAdapter(mBeers));
         mBeerListRecyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -176,7 +170,7 @@ public class CustomerBrowseAllFragment extends Fragment {
                             mBeer.getQuantity();
                             // Change the quantity of beer to 1, and add it to the basket singleton
                             tempBeer.setQuantity(1);
-                            mCurrentSeller.addToBasket(tempBeer);
+                            mViewModel.addToBasket(tempBeer);
                             mBeer.getQuantity();
 
                             // Subtract 1 from the list beers quantity and then update the quantity
@@ -189,11 +183,10 @@ public class CustomerBrowseAllFragment extends Fragment {
             }
 
             public void updateViews(BeerModel beerModel) {
-                BeerCategoryModel category = mBeerDBHelper.getCategory(beerModel.getBeerCategoryID());
-                BeerBreweryModel brewery = mBeerDBHelper.getBrewery(beerModel.getBeerBreweryID());
+
                 mBeerName.setText(beerModel.getBeerName());
-                mBeerCategory.setText(category.getBeerCategoryName());
-                mBeerBrewery.setText(brewery.getBeerBreweryName());
+                mBeerCategory.setText(mViewModel.getCategoryName(beerModel));
+                mBeerBrewery.setText(mViewModel.getBreweryName(beerModel));
                 mBeerQuantityNumber.setText(Integer.toString(beerModel.getQuantity()));
             }
 

@@ -35,6 +35,7 @@ import com.example.beershop.database.UserDataBaseHelper;
 import com.example.beershop.models.BeerModel;
 import com.example.beershop.singletons.CurrentSeller;
 import com.example.beershop.utils.AnimationHelper;
+import com.example.beershop.viewmodels.CustomerScanBarcodeFragmentViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -59,10 +60,7 @@ public class CustomerScanBarcodeFragment extends Fragment {
     String mCurrentPhotoPath;
     LottieAnimationView mScanAnimation;
 
-    BeerDataBaseHelper mBeerDBHelper;
-    UserDataBaseHelper mUserDBHelper;
-    CurrentSeller mCurrentSeller;
-
+    CustomerScanBarcodeFragmentViewModel mViewModel;
     public static CustomerScanBarcodeFragment newInstance() {
 
         Bundle args = new Bundle();
@@ -78,9 +76,7 @@ public class CustomerScanBarcodeFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_customer_scan_barcode, null);
         mScanAnimation = v.findViewById(R.id.lottie_scan_barcode);
 
-        mCurrentSeller = CurrentSeller.getInstance();
-        mUserDBHelper = new UserDataBaseHelper(getContext());
-        mBeerDBHelper = new BeerDataBaseHelper(getContext());
+        mViewModel = new CustomerScanBarcodeFragmentViewModel( getContext());
 
 
         mScanAnimation.playAnimation();
@@ -180,14 +176,15 @@ public class CustomerScanBarcodeFragment extends Fragment {
                         String s = barcodes.get(0).getRawValue();
 
                         //Check if the beer is the resellers inventory, and check the max quantity that the user can add
-                        BeerModel beerFromDB = mBeerDBHelper.getBeer(s);
+                        assert s != null;
+                        BeerModel beerFromDB = mViewModel.getBeer(s);
 
                         // If bm == null then the beer doesnt exist in the DB
-                        if (mBeerDBHelper.getBeer(s) == null) {
+                        if (beerFromDB == null) {
                             // FailureDialog?
                             Toast.makeText(getContext(), "There was a mistake! try adding the beer manually", Toast.LENGTH_LONG).show();
                         } else {
-                            BeerModel beerFromInventory = mUserDBHelper.getBeer(beerFromDB, mCurrentSeller.getResellerModel());
+                            BeerModel beerFromInventory = mViewModel.getBeerFromInventory(beerFromDB);
                             if (beerFromInventory.getQuantity() > 0) {
                                 runSuccessDialog(beerFromInventory);
                             }
@@ -275,7 +272,7 @@ public class CustomerScanBarcodeFragment extends Fragment {
                         AnimationHelper.bounce(mAddButton);
                         BeerModel newBeer = mBeerModel.copy();
                         newBeer.setQuantity(Integer.parseInt((mQuantity.getText().toString())));
-                        mCurrentSeller.addToBasket(newBeer);
+                        mViewModel.addToBasket(newBeer);
                         Toast.makeText(getContext(), "Beer has been added!", Toast.LENGTH_SHORT).show();
                         getActivity().finish();
                         dismiss();
@@ -287,8 +284,8 @@ public class CustomerScanBarcodeFragment extends Fragment {
 
             //
             mBeerName.setText(mBeerModel.getBeerName());
-            mBeerBrewery.setText(mBeerDBHelper.getBrewery(mBeerModel.getBeerBreweryID()).getBeerBreweryName());
-            mBeerCategory.setText(mBeerDBHelper.getCategory(mBeerModel.getBeerCategoryID()).getBeerCategoryName());
+            mBeerBrewery.setText(mViewModel.getBrewery(mBeerModel).getBeerBreweryName());
+            mBeerCategory.setText(mViewModel.getCategory(mBeerModel).getBeerCategoryName());
 
         }
     }
