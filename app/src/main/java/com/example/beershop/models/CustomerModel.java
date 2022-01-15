@@ -4,38 +4,38 @@ import androidx.annotation.NonNull;
 
 //This is a data model for Customers
 public class CustomerModel {
-    int m_customerID; // Unique ID for the record
-    String m_customerUsername; // Username of the customer
-    String m_customerPassword; // Password of the customer
+    int m_ID; // Unique ID for the record
+    String m_Username; // Username of the customer
+    String m_Password; // Password of the customer
 
     public CustomerModel(int m_customerID, String m_customerUsername, String m_customerPassword) {
-        this.m_customerID = m_customerID;
-        this.m_customerUsername = m_customerUsername;
-        this.m_customerPassword = m_customerPassword;
+        this.m_ID = m_customerID;
+        this.m_Username = m_customerUsername;
+        this.m_Password = m_customerPassword;
     }
 
     public int getCustomerID() {
-        return m_customerID;
+        return m_ID;
     }
 
     public void setCustomerID(int m_customerID) {
-        this.m_customerID = m_customerID;
+        this.m_ID = m_customerID;
     }
 
     public String getCustomerUsername() {
-        return m_customerUsername;
+        return m_Username;
     }
 
     public void setCustomerUsername(String m_customerUsername) {
-        this.m_customerUsername = m_customerUsername;
+        this.m_Username = m_customerUsername;
     }
 
     public String getCustomerPassword() {
-        return m_customerPassword;
+        return m_Password;
     }
 
     public void setCustomerPassword(String m_customerPassword) {
-        this.m_customerPassword = m_customerPassword;
+        this.m_Password = m_customerPassword;
     }
 
 
@@ -43,9 +43,9 @@ public class CustomerModel {
     @Override
     public String toString() {
         return "CustomerModel{" +
-                "m_customerID=" + m_customerID +
-                ", m_customerUsername='" + m_customerUsername + '\'' +
-                ", m_customerPassword='" + m_customerPassword + '\'' +
+                "m_customerID=" + m_ID +
+                ", m_customerUsername='" + m_Username + '\'' +
+                ", m_customerPassword='" + m_Password + '\'' +
                 '}';
     }
 }

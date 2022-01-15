@@ -19,7 +19,7 @@ public class BasketModel {
 
         for (int i = 0; i < mBeers.size(); i++) {
             BeerModel bm = mBeers.get(i);
-            if (model.getBarcode() == bm.getBarcode() && model.getBeerName() == bm.getBeerName()) {
+            if (model.getBarcode().equals(bm.getBarcode()) && model.getBeerName().equals(bm.getBeerName())) {
                 bm.addQuantity(1);
                 mBeers.set(i, bm);
                 return;

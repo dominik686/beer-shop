@@ -15,7 +15,6 @@ import java.util.*
 class CustomerBasketViewModel(context : Context) : ViewModel()
 {
    private var mCurrentSeller = CurrentSeller.getInstance()
-    private  var mCurrentUser = CurrentUser.getInstance(null, null);
 
     private   var mBeerDBHelper = BeerDataBaseHelper(context)
     private  var mUserDBHelper = UserDataBaseHelper(context)

@@ -42,8 +42,7 @@ public class CustomerBasketFragment extends Fragment {
     LottieAnimationView animationView;
 
 
-    CustomerBasketViewModel mViewModel = new CustomerBasketViewModel(getContext());
-
+    CustomerBasketViewModel mViewModel ;
     public static CustomerBasketFragment newInstance() {
         CustomerBasketFragment fragment = new CustomerBasketFragment();
         return fragment;
@@ -69,7 +68,7 @@ public class CustomerBasketFragment extends Fragment {
         });
         mBuyButton = v.findViewById(R.id.buy_button);
 
-
+        mViewModel = new CustomerBasketViewModel(getContext());
         animationView = v.findViewById(R.id.confetti);
 
         mBasketList.setAdapter(new BasketListAdapter(mViewModel.getBasket()));
@@ -122,10 +121,6 @@ public class CustomerBasketFragment extends Fragment {
             }
         });
         return v;
-    }
-
-    public void clearBasket() {
-
     }
 
 
