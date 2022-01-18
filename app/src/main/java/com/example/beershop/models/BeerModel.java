@@ -4,16 +4,16 @@ package com.example.beershop.models;
 public class BeerModel {
     private int mBeerID; // Unique ID for the record
     private String mBeerName;
-    private String mBeerThumbnailName; // String for the pictures
+    private String mBeerPictureName; // String for the pictures
     private String mBarcode; //Barcode of the beer
     private int mBeerCategoryID; // ID of the beer category
     private int mBeerBreweryID; // ID for the brewery
     private int mBeerQuantity = 1;
 
-    public BeerModel(int mBeerID, String mBeerName, String mBeerThumbnailName, int mBeerCategoryID, int mBeerBreweryID, String mBarcode) {
+    public BeerModel(int mBeerID, String mBeerName, String mPictureName, int mBeerCategoryID, int mBeerBreweryID, String mBarcode) {
         this.mBeerID = mBeerID;
         this.mBeerName = mBeerName;
-        this.mBeerThumbnailName = mBeerThumbnailName;
+        this.mBeerPictureName = mPictureName;
         this.mBarcode = mBarcode;
         this.mBeerCategoryID = mBeerCategoryID;
         this.mBeerBreweryID = mBeerBreweryID;
@@ -65,11 +65,11 @@ public class BeerModel {
     }
 
     public String getBeerThumbnailName() {
-        return mBeerThumbnailName;
+        return mBeerPictureName;
     }
 
     public void setBeerThumbnailName(String mBeerThumbnailName) {
-        this.mBeerThumbnailName = mBeerThumbnailName;
+        this.mBeerPictureName = mBeerThumbnailName;
     }
 
     public void setBeerDescription(String mBeerDescription) {
@@ -88,7 +88,7 @@ public class BeerModel {
     }
 
     public BeerModel copy() {
-        return new BeerModel(mBeerID, mBeerName, mBeerThumbnailName, mBeerCategoryID, getBeerBreweryID(), mBarcode);
+        return new BeerModel(mBeerID, mBeerName, mBeerPictureName, mBeerCategoryID, getBeerBreweryID(), mBarcode);
     }
 
     public String toItemString() {

@@ -23,28 +23,12 @@ public class ResellerModel {
         this.m_Inventory = m_Inventory;
     }
 
-    public int getID() {
-        return m_ID;
-    }
-
-    public void setID(int m_ID) {
-        this.m_ID = m_ID;
-    }
-
     public String getUsername() {
         return m_Username;
     }
 
-    public void setUsername(String mUsername) {
-        this.m_Username = mUsername;
-    }
-
     public String getPassword() {
         return m_Password;
-    }
-
-    public void setPassword(String mPassword) {
-        this.m_Password = mPassword;
     }
 
     public String getInventory() {

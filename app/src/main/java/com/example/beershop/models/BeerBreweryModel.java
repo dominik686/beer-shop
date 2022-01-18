@@ -16,24 +16,12 @@ public class BeerBreweryModel {
         return mBeerBreweryID;
     }
 
-    public void setBeerBreweryID(int mBeerBreweryID) {
-        this.mBeerBreweryID = mBeerBreweryID;
-    }
-
     public String getBeerBreweryName() {
         return mBeerBreweryName;
     }
 
-    public void setBeerBreweryName(String mBeerBreweryName) {
-        this.mBeerBreweryName = mBeerBreweryName;
-    }
-
     public String getBeerBreweryDescription() {
         return mBeerBreweryDescription;
-    }
-
-    public void setBeerBreweryDescription(String mBeerBreweryDescription) {
-        this.mBeerBreweryDescription = mBeerBreweryDescription;
     }
 
 }

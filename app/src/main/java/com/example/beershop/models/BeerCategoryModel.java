@@ -16,24 +16,12 @@ public class BeerCategoryModel {
         return mBeerCategoryID;
     }
 
-    public void setBeerCategoryID(int mBeerCategoryID) {
-        this.mBeerCategoryID = mBeerCategoryID;
-    }
-
     public String getBeerCategoryName() {
         return mBeerCategoryName;
     }
 
-    public void setBeerCategoryName(String mBeerCategoryName) {
-        this.mBeerCategoryName = mBeerCategoryName;
-    }
-
     public String getBeerCategoryDescription() {
         return mBeerCategoryDescription;
-    }
-
-    public void setBeerCategoryDescription(String mBeerCategoryDescription) {
-        this.mBeerCategoryDescription = mBeerCategoryDescription;
     }
 
 

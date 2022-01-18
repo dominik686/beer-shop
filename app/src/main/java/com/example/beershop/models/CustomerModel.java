@@ -18,24 +18,12 @@ public class CustomerModel {
         return m_ID;
     }
 
-    public void setCustomerID(int m_customerID) {
-        this.m_ID = m_customerID;
-    }
-
     public String getCustomerUsername() {
         return m_Username;
     }
 
-    public void setCustomerUsername(String m_customerUsername) {
-        this.m_Username = m_customerUsername;
-    }
-
     public String getCustomerPassword() {
         return m_Password;
-    }
-
-    public void setCustomerPassword(String m_customerPassword) {
-        this.m_Password = m_customerPassword;
     }
 
 

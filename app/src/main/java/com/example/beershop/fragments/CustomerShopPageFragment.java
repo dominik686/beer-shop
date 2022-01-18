@@ -19,6 +19,7 @@ import com.example.beershop.activities.CustomerBrowseAllActivity;
 import com.example.beershop.activities.CustomerScanBarcodeActivity;
 import com.example.beershop.activities.LoginActivity;
 import com.example.beershop.utils.AnimationHelper;
+import com.example.beershop.viewmodels.CustomerShopPageViewModel;
 
 public class CustomerShopPageFragment extends Fragment {
     ImageButton mSignOutButton;
@@ -28,6 +29,7 @@ public class CustomerShopPageFragment extends Fragment {
     Button mScanBarcodeButton;
     Button mGoBackButton;
 
+    CustomerShopPageViewModel mViewModel;
     public static CustomerShopPageFragment newInstance() {
 
         Bundle args = new Bundle();
@@ -41,6 +43,7 @@ public class CustomerShopPageFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_customer_shop_page, container, false);
+        mViewModel = new CustomerShopPageViewModel();
         mSignOutButton = v.findViewById(R.id.buttonSignout);
         mSignOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
