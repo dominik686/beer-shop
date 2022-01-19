@@ -17,28 +17,28 @@ import java.util.List;
 
 public class BeerDataBaseHelper extends SQLiteOpenHelper {
 
-    public static final String BEER_BREWERY_TABLE = "BeerBrewery";
-    public static final String COLUMN_BEER_BREWERY_NAME = "BeerBreweryName";
-    public static final String COLUMN_BEER_BREWERY_DESCRIPTION = "BeerBreweryDescription";
+    private static final String BEER_BREWERY_TABLE = "BeerBrewery";
+    private static final String COLUMN_BEER_BREWERY_NAME = "BeerBreweryName";
+    private static final String COLUMN_BEER_BREWERY_DESCRIPTION = "BeerBreweryDescription";
 
-    public static final String COLUMN_BEER_NAME = "BeerName";
+    private static final String COLUMN_BEER_NAME = "BeerName";
 
     //Beer categories table variables
-    public static final String BEER_CATEGORIES_TABLE = "BeerCategories";
-    public static final String COLUMN_BEER_CATEGORY_NAME = "BeerCategoryName";
-    public static final String COLUMN_BEER_CATEGORY_DESCRIPTION = "BeerCategoryDescription";
+    private static final String BEER_CATEGORIES_TABLE = "BeerCategories";
+    private static final String COLUMN_BEER_CATEGORY_NAME = "BeerCategoryName";
+    private static final String COLUMN_BEER_CATEGORY_DESCRIPTION = "BeerCategoryDescription";
     //Beer table variables
     private static final String BEERS_TABLE = "Beer";
     private static final String COLUMN_BEER_ID = "BeerID";
+    private static final String COLUMN_BEER_PICTURE = "BeerPicture";
+    private static final String COLUMN_BEER_CATEGORY_ID = "BeerCategoryID";
+    private static final String COLUMN_BEER_BREWERY_ID = "BeerBreweryID";
+    private static final String COLUMN_BEER_BARCODE = "BeerBarcode";
 
     public BeerDataBaseHelper(@Nullable Context context) {
         super(context, "beer.db", null, 1);
     }
 
-    private static final String COLUMN_BEER_PICTURE = "BeerPicture";
-    private static final String COLUMN_BEER_CATEGORY_ID = "BeerCategoryID";
-    private static final String COLUMN_BEER_BREWERY_ID = "BeerBreweryID";
-    private static final String COLUMN_BEER_BARCODE = "BeerBarcode";
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -161,20 +161,7 @@ public class BeerDataBaseHelper extends SQLiteOpenHelper {
         return null;
     }
 
-    // Look for the category with the same name and return its id (if it exists)
-    public int getIdFromCategoryName(String categoryName) {
-        /*
-        int resultID = -1;
-        SQLiteDatabase db = this.getReadableDatabase();
-        String queryString = "SELECT " + "*" + " FROM " + BEER_CATEGORIES_TABLE +
-                " WHERE " + COLUMN_BEER_CATEGORY_NAME + " = " + "\"" + categoryName + "\"";
-        Cursor cursor = db.rawQuery(queryString, null);
-        resultID = Integer.parseInt(cursor.getString(0));
-        return  resultID;
 
-         */
-        return 0;
-    }
 
     // Add a new beer category (if it doesnt already exist)
     public boolean addBeerCategory(BeerCategoryModel model) {
